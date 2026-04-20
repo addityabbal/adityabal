@@ -1380,6 +1380,16 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 1.4rem;
   }
+  @media (max-width: 900px) {
+    .coming-soon-wrap[style*="repeat(4"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+  @media (max-width: 540px) {
+    .coming-soon-wrap[style*="repeat(4"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
   .coming-soon-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -1469,6 +1479,58 @@
     color: var(--muted);
     opacity: 0.6;
     letter-spacing: 0.06em;
+  }
+
+  .shipped-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #052e16;
+    background: #4ade80;
+    padding: 0.28rem 0.75rem;
+    border-radius: 2px;
+    font-weight: 700;
+    width: fit-content;
+  }
+  .shipped-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #052e16;
+  }
+  .project-thumb {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 6px 6px 0 0;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+  .project-thumb:hover { opacity: 1; }
+  .project-thumb-link {
+    display: block;
+    margin: -2rem -1.8rem 1rem;
+    overflow: hidden;
+    border-radius: 6px 6px 0 0;
+  }
+  .project-gh-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.15s;
+  }
+  .project-gh-link:hover { opacity: 1; }
+  .coming-soon-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
   /* Banner version for full-width coming soon */
@@ -2148,7 +2210,27 @@
     </div>
   </div>
 
-  <div class="coming-soon-wrap" style="margin-top: 1.4rem;">
+  <div class="coming-soon-wrap" style="margin-top: 1.4rem; grid-template-columns: repeat(4, 1fr);">
+    <!-- Yoga-Doc — shipped -->
+    <div class="coming-soon-card" style="padding: 0; overflow: hidden;">
+      <div style="padding: 0;">
+        <a href="https://github.com/addityabbal/Yoga-Doc" target="_blank" rel="noopener noreferrer">
+          <img src="https://opengraph.githubassets.com/1/addityabbal/Yoga-Doc"
+               alt="Yoga-Doc"
+               class="project-thumb" />
+        </a>
+      </div>
+      <div style="padding: 1.6rem 1.8rem 1.8rem; display: flex; flex-direction: column; gap: 1rem;">
+        <div class="shipped-badge"><span class="shipped-dot"></span> Shipped</div>
+        <span style="font-size: 2rem;">🧘</span>
+        <h3>Yoga-Doc</h3>
+        <p>A documentation tool for yoga practitioners — structured pose reference and session logging, open-sourced on GitHub.</p>
+        <div class="coming-soon-footer-row">
+          <div class="coming-soon-footer" style="border: none; padding: 0; margin: 0;">Health · Docs · OSS</div>
+          <a href="https://github.com/addityabbal/Yoga-Doc" target="_blank" rel="noopener noreferrer" class="project-gh-link">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
     <div class="coming-soon-card">
       <span class="coming-soon-icon">📱</span>
       <div class="wip-badge"><span class="wip-dot"></span> In Progress</div>
