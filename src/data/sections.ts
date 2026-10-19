@@ -51,7 +51,35 @@ export const aliasPages: SectionPage[] = [
   { ...sectionPages.find((p) => p.slug === "case-studies")!, slug: "casestudies", canonical: "/case-studies" },
 ];
 
-// section id -> slug, used by the in-page nav to show clean URLs.
-export const sectionSlugs: Record<string, string> = Object.fromEntries(
-  sectionPages.map((p) => [p.id, p.slug])
-);
+// ── Project deep links: /projects/<slug> ──────────────────────────────────
+// To add a project: give its card in Site.astro an id="project-<slug>", then add an entry here.
+export interface ProjectPage {
+  slug: string;        // URL: adityabal.com/projects/<slug>
+  id: string;          // id of the project card in Site.astro
+  title: string;       // link-preview title
+  description: string; // link-preview description
+  image?: string;      // link-preview image (defaults to the site image)
+}
+
+export const projectPages: ProjectPage[] = [
+  {
+    slug: "yoga-doc",
+    id: "project-yoga-doc",
+    title: "Yoga-Doc — a project by Aditya Hemant Bal",
+    description: "Describe your pain area and Yoga-Doc suggests yoga poses to ease muscles and reduce pain. Open-sourced on GitHub (JavaScript · Vite).",
+    image: "https://opengraph.githubassets.com/1/addityabbal/Yoga-Doc",
+  },
+  {
+    slug: "pdf-rag-chatbot",
+    id: "project-pdf-rag-chatbot",
+    title: "PDF RAG Chatbot — a project by Aditya Hemant Bal",
+    description: "A retrieval-augmented chatbot that answers questions grounded in uploaded PDFs, with page-level citations and a confidence guardrail against hallucination (Python · Claude API).",
+    image: "https://opengraph.githubassets.com/1/addityabbal/rag-pdf-chatbot",
+  },
+];
+
+// element id -> URL path (without leading /), used by the page script for clean URLs and Back/Forward.
+export const sectionSlugs: Record<string, string> = Object.fromEntries([
+  ...sectionPages.map((p) => [p.id, p.slug]),
+  ...projectPages.map((p) => [p.id, `projects/${p.slug}`]),
+]);

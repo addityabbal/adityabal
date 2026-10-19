@@ -1,0 +1,25 @@
+---
+// Project deep links: /projects/yoga-doc, /projects/pdf-rag-chatbot, …
+// Each renders the full site, scrolls to (and briefly highlights) that project card,
+// and has its own link-preview title, description and image. Entries live in src/data/sections.ts.
+import Site from "../../components/Site.astro";
+import { projectPages, type ProjectPage } from "../../data/sections";
+
+export function getStaticPaths() {
+  return projectPages.map((project) => ({
+    params: { project: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props as { project: ProjectPage };
+---
+<Site
+  title={project.title}
+  description={project.description}
+  ogTitle={project.title}
+  ogDescription={project.description}
+  path={`/projects/${project.slug}`}
+  section={project.id}
+  ogImage={project.image}
+/>

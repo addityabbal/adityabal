@@ -8,6 +8,7 @@ interface Props {
   ogDescription?: string;
   path?: string;
   section?: string;
+  ogImage?: string;
 }
 const {
   title = "Aditya Hemant Bal | Senior Product Manager Mumbai | Jio Platforms | Digital Products at Scale",
@@ -16,6 +17,7 @@ const {
   ogDescription = "11+ years building digital products at scale across Mumbai, Hyderabad & Bangalore. Led JioPC to 10M+ homes, Jio Games Watch to 3.8M users, and Jio Stream to +15% revenue growth. SKOCH Award winner 2024.",
   path = "/",
   section,
+  ogImage = "https://adityabal.com/og-image.jpg",
 } = Astro.props;
 const url = new URL(path, "https://adityabal.com").href;
 import { sectionSlugs } from "../data/sections";
@@ -44,7 +46,7 @@ import { sectionSlugs } from "../data/sections";
 <meta property="og:title" content={ogTitle} />
 <meta property="og:description" content={ogDescription} />
 <meta property="og:url" content={url} />
-<meta property="og:image" content="https://adityabal.com/og-image.jpg" />
+<meta property="og:image" content={ogImage} />
 <meta property="og:site_name" content="Aditya Hemant Bal — Product Manager" />
 <meta property="og:locale" content="en_IN" />
 <meta property="profile:first_name" content="Aditya" />
@@ -540,7 +542,9 @@ import { sectionSlugs } from "../data/sections";
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
-  section[id] { scroll-margin-top: 72px; } /* keep deep-linked sections clear of the fixed nav */
+  section[id], [id^="project-"] { scroll-margin-top: 88px; } /* keep deep-linked targets clear of the fixed nav */
+  .deep-target { animation: deepPulse 2.4s ease-out 0.3s 1; }
+  @keyframes deepPulse { 0%,40% { box-shadow: 0 0 0 2px var(--accent), 0 0 32px rgba(232,201,122,0.35); } 100% { box-shadow: 0 0 0 0 transparent; } }
 
   body {
     background: var(--bg);
@@ -2260,7 +2264,7 @@ import { sectionSlugs } from "../data/sections";
 
   <div class="coming-soon-wrap" style="margin-top: 1.4rem; grid-template-columns: repeat(2, 1fr);">
     <!-- Yoga-Doc — shipped -->
-    <div class="coming-soon-card" style="padding: 0; overflow: hidden;">
+    <div class="coming-soon-card" id="project-yoga-doc" style="padding: 0; overflow: hidden;">
       <div style="padding: 0;">
         <a href="https://github.com/addityabbal/Yoga-Doc" target="_blank" rel="noopener noreferrer">
           <img src="https://opengraph.githubassets.com/1/addityabbal/Yoga-Doc"
@@ -2280,7 +2284,7 @@ import { sectionSlugs } from "../data/sections";
       </div>
     </div>
     <!-- PDF RAG Chatbot — shipped -->
-    <div class="coming-soon-card" style="padding: 0; overflow: hidden;">
+    <div class="coming-soon-card" id="project-pdf-rag-chatbot" style="padding: 0; overflow: hidden;">
       <div style="padding: 0;">
         <a href="https://github.com/addityabbal/rag-pdf-chatbot" target="_blank" rel="noopener noreferrer">
           <img src="https://opengraph.githubassets.com/1/addityabbal/rag-pdf-chatbot"
@@ -2582,7 +2586,9 @@ document.addEventListener('keydown', function(e) {
     if (section && !location.hash) {
       var go = function () {
         var el = document.getElementById(section);
-        if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'instant', block: el.tagName === 'SECTION' ? 'start' : 'center' });
+        if (el.tagName !== 'SECTION') el.classList.add('deep-target');
       };
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
       window.addEventListener('load', go, { once: true });
@@ -2601,7 +2607,7 @@ document.addEventListener('keydown', function(e) {
       });
     });
     window.addEventListener('popstate', function () {
-      var slug = location.pathname.replace(/^\/|\/$/g, '');
+      var slug = location.pathname.replace(/^\/+|\/+$/g, '');
       var id = Object.keys(sectionSlugs).find(function (k) { return sectionSlugs[k] === slug; });
       var el = id ? document.getElementById(id) : null;
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
