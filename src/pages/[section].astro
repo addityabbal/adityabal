@@ -1,0 +1,23 @@
+---
+// Deep-link pages: /about, /products, /experience, /projects, /case-studies, /contact
+// Each renders the full site, scrolls to its section, and has its own link-preview meta.
+import Site from "../components/Site.astro";
+import { sectionPages, aliasPages, type SectionPage } from "../data/sections";
+
+export function getStaticPaths() {
+  return [...sectionPages, ...aliasPages].map((page) => ({
+    params: { section: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props as { page: SectionPage };
+---
+<Site
+  title={page.title}
+  description={page.description}
+  ogTitle={page.title}
+  ogDescription={page.description}
+  path={page.canonical ?? `/${page.slug}`}
+  section={page.id}
+/>
