@@ -24,7 +24,7 @@
 		{
 			"binding": "DB",
 			"database_name": "adityabal-demos",
-			"database_id": "REPLACE_WITH_D1_DATABASE_ID",
+			"database_id": "2ac8d598-bc8b-446e-98dc-7b1b2c4a2f52",
 			"migrations_dir": "migrations"
 		}
 	],
