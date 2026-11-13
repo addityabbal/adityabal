@@ -12,12 +12,16 @@
 	},
 
 	// ── Live demos (/demos/*, /api/*) ──────────────────────────────────────────
-	// Secrets (never in this file): ANTHROPIC_API_KEY, TURNSTILE_SECRET_KEY, SESSION_SECRET
-	//   npx wrangler secret put ANTHROPIC_API_KEY   (etc.)
+	// Secrets (never in this file): TURNSTILE_SECRET_KEY, SESSION_SECRET
+	//   npx wrangler secret put TURNSTILE_SECRET_KEY   (etc.)
 	"vars": {
 		"TURNSTILE_SITE_KEY": "0x4AAAAAAF_O6R3MA5HcxYls",
 		"ALLOWED_ORIGINS": "https://adityabal.com,https://www.adityabal.com",
-		"YOGA_MODEL": "claude-haiku-5-5"
+		"YOGA_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+	},
+	// Workers AI: free 10,000 neurons/day (~60 neurons per Yoga-Doc request).
+	"ai": {
+		"binding": "AI"
 	},
 	// Create once with: npx wrangler d1 create adityabal-demos  (then paste the id below)
 	"d1_databases": [

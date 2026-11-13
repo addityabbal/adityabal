@@ -1,8 +1,8 @@
 // POST /api/yoga — server-side proxy for the Yoga-Doc live demo.
 // The browser sends only a body-zone id from a fixed list; the prompt is built here,
-// so visitors can't inject instructions and the Anthropic key never leaves the server.
+// so visitors can't inject instructions. Inference runs on Cloudflare Workers AI
+// (free daily allowance) through the AI binding — no third-party API key involved.
 import type { APIRoute } from "astro";
-import Anthropic from "@anthropic-ai/sdk";
 import { env } from "cloudflare:workers";
 import {
   clientIp,
@@ -55,6 +55,32 @@ BREATH: [one breathing note]
 Separate each pose with a blank line. No extra text.`;
 }
 
+/** Yields text chunks from a Workers AI SSE stream (legacy `response` or OpenAI-style `choices` shape). */
+async function* readSseText(stream: ReadableStream<Uint8Array>): AsyncGenerator<string> {
+  const reader = stream.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
+    for (const line of lines) {
+      if (!line.startsWith("data:")) continue;
+      const data = line.slice(5).trim();
+      if (!data || data === "[DONE]") continue;
+      try {
+        const evt = JSON.parse(data);
+        const text = evt.choices?.[0]?.delta?.content || evt.response;
+        if (typeof text === "string" && text) yield text;
+      } catch {
+        /* skip malformed event */
+      }
+    }
+  }
+}
+
 export const POST: APIRoute = async ({ request }) => {
   const ip = clientIp(request);
 
@@ -102,36 +128,27 @@ export const POST: APIRoute = async ({ request }) => {
   }
   await logRequest(DEMO, ip, "ok", zone);
 
-  // 6. Call Claude and stream plain text back.
-  const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY, maxRetries: 1, timeout: 30_000 });
-  const stream = client.messages.stream({
-    model: env.YOGA_MODEL || "claude-haiku-5-5",
-    max_tokens: 2000,
-    output_config: { effort: "low" },
-    system: SYSTEM_PROMPT,
-    messages: [{ role: "user", content: buildPrompt(ZONES[zone]) }],
-  });
-
+  // 6. Run the model on Workers AI and stream plain text back.
   const encoder = new TextEncoder();
   const out = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        for await (const event of stream) {
-          if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-            controller.enqueue(encoder.encode(event.delta.text));
-          }
-        }
-        const final = await stream.finalMessage();
-        if (final.stop_reason === "refusal") controller.enqueue(encoder.encode("\n[[unavailable]]"));
+        const model = (env.YOGA_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast") as keyof AiModels;
+        const sse = (await env.AI.run(model, {
+          stream: true,
+          max_tokens: 700,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: buildPrompt(ZONES[zone]) },
+          ],
+        } as never)) as unknown as ReadableStream<Uint8Array>;
+        for await (const text of readSseText(sse)) controller.enqueue(encoder.encode(text));
       } catch (err) {
-        if (err instanceof Anthropic.APIError) console.error("yoga demo: Anthropic error", err.status);
-        else console.error("yoga demo: stream error", err);
+        // Includes running out of the free daily Workers AI allowance.
+        console.error("yoga demo: Workers AI error", err);
         controller.enqueue(encoder.encode("\n[[unavailable]]"));
       }
       controller.close();
-    },
-    cancel() {
-      stream.abort();
     },
   });
 

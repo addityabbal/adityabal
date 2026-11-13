@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS demo_settings (
   demo       TEXT PRIMARY KEY,
   enabled    INTEGER NOT NULL DEFAULT 1,
-  daily_cap  INTEGER NOT NULL DEFAULT 300
+  daily_cap  INTEGER NOT NULL DEFAULT 150
 );
-INSERT OR IGNORE INTO demo_settings (demo, enabled, daily_cap) VALUES ('yoga-doc', 1, 300);
+INSERT OR IGNORE INTO demo_settings (demo, enabled, daily_cap) VALUES ('yoga-doc', 1, 150);
 
 -- Requests served per demo per UTC day (enforces daily_cap).
 CREATE TABLE IF NOT EXISTS demo_usage (

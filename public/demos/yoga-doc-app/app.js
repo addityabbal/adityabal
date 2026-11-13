@@ -203,7 +203,7 @@ async function getTurnstileToken() {
   })
 }
 
-// ── Claude via server proxy ───────────────────────────────────────────────────
+// ── Workers AI via server proxy ───────────────────────────────────────────────────
 function parsePoses(text) {
   return text.split(/\n\s*\n/).map(block => {
     const lines = block.trim().split('\n')
