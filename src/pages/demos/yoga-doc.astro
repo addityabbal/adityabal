@@ -1,0 +1,70 @@
+---
+// Live demo: adityabal.com/demos/yoga-doc
+// Rendered on demand so it can read the public Turnstile site key and send a strict CSP.
+// The app itself is static (public/demos/yoga-doc-app/); AI calls go to /api/yoga.
+import { env } from "cloudflare:workers";
+
+export const prerender = false;
+
+const siteKey = env.TURNSTILE_SITE_KEY ?? "";
+const title = "Yoga-Doc Live Demo — a project by Aditya Hemant Bal";
+const description =
+  "Tap where it hurts and get three AI-suggested yoga poses to ease the pain. Live demo of Yoga-Doc, open-sourced on GitHub.";
+const url = "https://adityabal.com/demos/yoga-doc";
+const image = "https://opengraph.githubassets.com/1/addityabbal/Yoga-Doc";
+
+if (import.meta.env.PROD) {
+  Astro.response.headers.set(
+    "content-security-policy",
+    [
+      "default-src 'self'",
+      "script-src 'self' https://challenges.cloudflare.com",
+      "frame-src https://challenges.cloudflare.com",
+      "connect-src 'self'",
+      "img-src 'self' data:",
+      "style-src 'self' 'unsafe-inline'",
+      "object-src 'none'",
+      "base-uri 'none'",
+      "form-action 'none'",
+      "frame-ancestors 'none'",
+    ].join("; "),
+  );
+}
+Astro.response.headers.set("x-content-type-options", "nosniff");
+Astro.response.headers.set("referrer-policy", "strict-origin-when-cross-origin");
+Astro.response.headers.set("permissions-policy", "camera=(), microphone=(), geolocation=()");
+Astro.response.headers.set("cache-control", "public, max-age=300");
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="/demos/yoga-doc-app/style.css" />
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+    <script is:inline type="module" src="/demos/yoga-doc-app/app.js"></script>
+  </head>
+  <body>
+    <div id="app" data-sitekey={siteKey}></div>
+
+    <div id="captcha-box" hidden role="dialog" aria-modal="true" aria-labelledby="captcha-title">
+      <div class="captcha-card">
+        <p id="captcha-title">Quick check that you're human before the AI runs.</p>
+        <div id="captcha-slot"></div>
+        <button type="button" id="captcha-cancel">Cancel — show sample poses</button>
+      </div>
+    </div>
+
+    <noscript>Yoga-Doc needs JavaScript to run.</noscript>
+  </body>
+</html>

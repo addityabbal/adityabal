@@ -1,0 +1,8 @@
+# Copy to .dev.vars for local dev. Production values are set with `npx wrangler secret put <NAME>`.
+ANTHROPIC_API_KEY=sk-ant-...
+# Cloudflare's public always-pass Turnstile test keys:
+TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+# Any long random string, e.g. node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+SESSION_SECRET=change-me
+ALLOWED_ORIGINS=http://localhost:4321
