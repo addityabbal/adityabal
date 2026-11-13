@@ -17,12 +17,22 @@
 	"vars": {
 		"TURNSTILE_SITE_KEY": "0x4AAAAAAF_O6R3MA5HcxYls",
 		"ALLOWED_ORIGINS": "https://adityabal.com,https://www.adityabal.com",
-		"YOGA_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+		"YOGA_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+		"RAG_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 	},
-	// Workers AI: free 10,000 neurons/day (~60 neurons per Yoga-Doc request).
+	// Workers AI: free 10,000 neurons/day, shared across demos (see migrations/0002_rag.sql).
 	"ai": {
 		"binding": "AI"
 	},
+	// PDF RAG demo: precomputed chunk embeddings of data/rag/vedas-geeta-study-guide.md
+	// (scripts/rag-ingest.mjs). Chunk text itself lives in D1 (rag_chunks table).
+	"vectorize": [
+		{
+			"binding": "RAG_INDEX",
+			"index_name": "adityabal-rag",
+			"remote": true
+		}
+	],
 	// Create once with: npx wrangler d1 create adityabal-demos  (then paste the id below)
 	"d1_databases": [
 		{
