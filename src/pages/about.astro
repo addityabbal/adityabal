@@ -22,7 +22,7 @@ const certificateLinks = await Promise.all(
     <div class="wrap about-hero-grid">
       <div>
         <p class="eyebrow">{site.jobTitle} · {site.employer} · {site.location.city}, India</p>
-        <h1>About.</h1>
+        <h1>About</h1>
         <div class="prose bio">
           {bio.map((paragraph) => <p>{paragraph}</p>)}
         </div>
@@ -45,7 +45,7 @@ const certificateLinks = await Promise.all(
 
   <section class="section tone-alt" aria-labelledby="experience">
     <div class="wrap">
-      <SectionHeader id="experience" align="start" title="Experience." lead="Jio Platforms, 2014 to present." />
+      <SectionHeader id="experience" align="start" title="Experience" lead="Jio Platforms, 2014 to present." />
       <ol class="roles">
         {experience.map((role) => (
           <li data-reveal>
@@ -63,7 +63,7 @@ const certificateLinks = await Promise.all(
 
   <section class="section tone-base" aria-labelledby="education">
     <div class="wrap">
-      <SectionHeader id="education" align="start" title="Education." />
+      <SectionHeader id="education" align="start" title="Education" />
       <ul class="rows" data-reveal>
         {education.map((item) => (
           <li>
@@ -80,7 +80,7 @@ const certificateLinks = await Promise.all(
 
   <section class="section tone-dark" aria-labelledby="recognition">
     <div class="wrap">
-      <SectionHeader id="recognition" align="start" title="Recognition." lead="Awards and national stages." />
+      <SectionHeader id="recognition" align="start" title="Recognition" lead="Awards and national stages." />
       <ul class="bento">
         {recognition.map((item) => (
           <li class="card" data-reveal>
@@ -109,7 +109,7 @@ const certificateLinks = await Promise.all(
       <SectionHeader
         id="talks"
         align="start"
-        title="Talks."
+        title="Talks"
         lead="Invited as an industry expert to speak on AI and product management."
       />
       <ul class="bento">
@@ -136,7 +136,7 @@ const certificateLinks = await Promise.all(
 
   <section class="section tone-alt" aria-labelledby="certifications">
     <div class="wrap">
-      <SectionHeader id="certifications" align="start" title="Certifications." />
+      <SectionHeader id="certifications" align="start" title="Certifications" />
       <ul class="rows" data-reveal>
         {certifications.map((cert, index) => (
           <li>
@@ -163,7 +163,7 @@ const certificateLinks = await Promise.all(
 
   <section class="section tone-base" aria-labelledby="patent">
     <div class="wrap">
-      <SectionHeader id="patent" align="start" title="Patent." />
+      <SectionHeader id="patent" align="start" title="Patent" />
       <ul class="rows" data-reveal>
         <li>
           <p class="row-meta">{patent.status}</p>
@@ -178,7 +178,7 @@ const certificateLinks = await Promise.all(
 
   <section class="section tone-alt" aria-labelledby="skills">
     <div class="wrap">
-      <SectionHeader id="skills" align="start" title="Skills." />
+      <SectionHeader id="skills" align="start" title="Skills" />
       <ul class="rows" data-reveal>
         {skills.map((group) => (
           <li>
