@@ -1,0 +1,124 @@
+---
+// /projects: every project, AI first, filterable by type.
+// Without JavaScript all projects show; the filter is an enhancement.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Hero from "../../components/Hero.astro";
+import ProjectTile from "../../components/ProjectTile.astro";
+import { getProjects, projectPath, typeLabels } from "../../lib/projects";
+
+const projects = await getProjects();
+const filters = [
+  { value: "all", label: "All" },
+  { value: "ai", label: "AI projects" },
+  { value: "platform", label: "Platforms" },
+];
+---
+<BaseLayout
+  path="/projects"
+  title="Projects — Aditya Hemant Bal"
+  description="AI projects with live demos, and the platforms I built at Jio: JioPC, Jio Games Watch, Jio Stream and Jio Health Hub."
+>
+  <Hero
+    size="page"
+    title="Projects."
+    lead="AI products I built and shipped, and the platforms I led at Jio."
+  />
+
+  <section class="section tone-alt projects" aria-label="All projects">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label="Filter projects by type" hidden>
+        {filters.map((filter) => (
+          <button type="button" class="filter" data-filter={filter.value} aria-pressed={filter.value === "all" ? "true" : "false"}>
+            {filter.label}
+          </button>
+        ))}
+      </div>
+      <p class="visually-hidden" aria-live="polite" data-filter-status></p>
+      <div class="bento">
+        {projects.map((project) => (
+          <ProjectTile
+            headingLevel={2}
+            type={project.data.type}
+            title={project.data.title}
+            tagline={project.data.tagline}
+            href={projectPath(project)}
+            label={`${typeLabels[project.data.type]} · ${project.data.year}`}
+            demoUrl={project.data.demoUrl}
+            metric={project.data.type === "platform" ? project.data.metrics[0] : undefined}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects {
+    padding-top: var(--space-7);
+  }
+
+  /* Horizontal, swipeable on narrow screens; never wraps into a tall block. */
+  .filters {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .filters[hidden] {
+    display: none;
+  }
+
+  .filter {
+    flex: none;
+    min-height: 2.75rem;
+    padding: 0 var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: none;
+    font-size: var(--fs-small);
+    cursor: pointer;
+  }
+
+  .filter[aria-pressed="true"] {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg-alt);
+  }
+</style>
+
+<script>
+  const group = document.querySelector<HTMLElement>(".filters");
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter]")];
+  const tiles = [...document.querySelectorAll<HTMLElement>(".bento [data-type]")];
+  const status = document.querySelector<HTMLElement>("[data-filter-status]");
+  const valid = new Set(buttons.map((button) => button.dataset.filter));
+
+  function apply(filter: string, updateUrl: boolean) {
+    let shown = 0;
+    for (const tile of tiles) {
+      const match = filter === "all" || tile.dataset.type === filter;
+      tile.hidden = !match;
+      if (match) {
+        tile.classList.add("is-visible");
+        shown += 1;
+      }
+    }
+    for (const button of buttons) button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
+    if (status) status.textContent = `${shown} project${shown === 1 ? "" : "s"} shown`;
+    if (updateUrl) {
+      const url = new URL(location.href);
+      if (filter === "all") url.searchParams.delete("type");
+      else url.searchParams.set("type", filter);
+      history.replaceState(null, "", url);
+    }
+  }
+
+  if (group) {
+    group.hidden = false;
+    for (const button of buttons) button.addEventListener("click", () => apply(button.dataset.filter ?? "all", true));
+    const initial = new URL(location.href).searchParams.get("type") ?? "all";
+    if (initial !== "all" && valid.has(initial)) apply(initial, false);
+  }
+</script>

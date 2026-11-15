@@ -1,0 +1,78 @@
+---
+// /contact: email, LinkedIn, phone. Mail links are plain mailto: (Cloudflare email
+// obfuscation is switched off around them with email_off comments, since it breaks them).
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import { site } from "../data/site";
+---
+<BaseLayout
+  path="/contact"
+  title="Contact — Aditya Hemant Bal"
+  description="Open to product roles, collaborations, or a good conversation about building at scale. Reach me by email, LinkedIn or phone."
+>
+  <Hero
+    size="page"
+    title="Let's talk."
+    lead="A product role, a collaboration, or a good conversation about building at scale."
+  />
+
+  <section class="section tone-alt contact" aria-label="Contact details">
+    <div class="wrap">
+      <ul class="channels">
+        <li>
+          <p class="eyebrow">Email</p>
+          <Fragment set:html="<!--email_off-->" /><a href={`mailto:${site.email}`}>{site.email}</a><Fragment set:html="<!--/email_off-->" />
+        </li>
+        <li>
+          <p class="eyebrow">LinkedIn</p>
+          <a href={site.linkedin} rel="me noopener">linkedin.com/in/addityabbal</a>
+        </li>
+        <li>
+          <p class="eyebrow">Phone</p>
+          <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a>
+        </li>
+      </ul>
+      <p class="where">{site.location.city}, India</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    padding-top: var(--space-7);
+  }
+
+  .channels {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+
+  .channels li {
+    display: grid;
+    gap: var(--space-1);
+    padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    border-radius: var(--radius-l);
+    background: var(--tile);
+  }
+
+  /* Large, thumb-friendly links; long addresses wrap instead of overflowing on phones. */
+  .channels a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: clamp(1.25rem, 1rem + 1.6vw, 2rem);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-heading);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .where {
+    margin-top: var(--space-6);
+    text-align: center;
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+</style>

@@ -1,0 +1,299 @@
+---
+// /projects/<slug>: one template for every project. Body comes from the markdown file,
+// which must contain the fixed sections below as level-2 headings so deep links stay stable:
+//   #overview #problem #approach #architecture #demo #results #learnings
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import StatRow from "../../components/StatRow.astro";
+import {
+  PROJECT_SECTIONS,
+  getProjects,
+  ogImagePath,
+  projectPath,
+  shortPath,
+  statusLabels,
+  typeLabels,
+  type Project,
+} from "../../lib/projects";
+import { absoluteUrl, site } from "../../data/site";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.data.slug }, props: { project } }));
+}
+
+const { project } = Astro.props as { project: Project };
+const { data } = project;
+const { Content, headings } = await render(project);
+
+// Fail the build if a required section is missing or out of order.
+const found = headings.filter((heading) => heading.depth === 2).map((heading) => heading.slug);
+if (found.join(",") !== PROJECT_SECTIONS.join(",")) {
+  throw new Error(
+    `src/content/projects/${project.id}.md must have exactly these level-2 headings, in order: ` +
+      `${PROJECT_SECTIONS.join(", ")}. Found: ${found.join(", ") || "none"}.`,
+  );
+}
+const sections = headings.filter((heading) => heading.depth === 2);
+
+const path = projectPath(project);
+const shortUrl = absoluteUrl(shortPath(project));
+const pageTitle = `${data.title} — ${data.tagline.replace(/\.$/, "")} | ${site.shortName}`;
+const description = `${data.tagline} ${typeLabels[data.type]} by ${site.name}, ${data.year}.`;
+
+const jsonLd =
+  data.type === "ai"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: data.title,
+        description: data.tagline,
+        url: absoluteUrl(path),
+        image: absoluteUrl(ogImagePath(project)),
+        applicationCategory: "WebApplication",
+        operatingSystem: "Web",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        author: { "@type": "Person", "@id": `${site.url}/#person`, name: site.name, url: site.url },
+        ...(data.repoUrl ? { codeRepository: data.repoUrl } : {}),
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        name: data.title,
+        description: data.tagline,
+        url: absoluteUrl(path),
+        image: absoluteUrl(ogImagePath(project)),
+        contributor: { "@type": "Person", "@id": `${site.url}/#person`, name: site.name, url: site.url },
+        ...(data.pressUrl ? { sameAs: data.pressUrl } : {}),
+      };
+
+const facts = [
+  { label: "Role", value: data.role },
+  { label: "Year", value: data.year },
+  { label: "Status", value: statusLabels[data.status] },
+  ...(data.stack.length ? [{ label: "Stack", value: data.stack.join(" · ") }] : []),
+];
+---
+<BaseLayout
+  path={path}
+  title={pageTitle}
+  description={description}
+  ogImage={ogImagePath(project)}
+  ogImageAlt={`${data.title}: ${data.tagline}`}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="project-hero tone-base">
+      <div class="wrap">
+        <p class="eyebrow"><a class="tap crumb" href="/projects">Projects</a> · {typeLabels[data.type]}</p>
+        <h1>{data.title}</h1>
+        <p class="project-tagline">{data.tagline}</p>
+        <div class="project-actions">
+          {data.demoUrl && <a class="cta" href={data.demoUrl}>Try the live demo</a>}
+          {data.repoUrl && <a class="link-chevron tap" href={data.repoUrl} rel="noopener">View source on GitHub</a>}
+          {data.pressUrl && !data.demoUrl && <a class="link-chevron tap" href={data.pressUrl} rel="noopener">{data.pressLabel ?? "Press coverage"}</a>}
+          <button type="button" class="cta cta-quiet" data-copy-link={shortUrl}>
+            <span data-copy-label>Copy link</span>
+          </button>
+          <span class="visually-hidden" aria-live="polite" data-copy-status></span>
+        </div>
+      </div>
+    </header>
+
+    <section class="tone-alt project-facts" aria-label="Project facts">
+      <div class="wrap">
+        <dl class="facts">
+          {facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+        {data.metrics.length > 0 && <StatRow items={data.metrics} label={`${data.title} in numbers`} />}
+      </div>
+    </section>
+
+    <nav class="section-nav" aria-label="On this page">
+      <ul class="wrap">
+        {sections.map((section) => (
+          <li><a href={`#${section.slug}`}>{section.text}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="tone-base project-body">
+      <div class="wrap">
+        <div class="prose">
+          <Content />
+        </div>
+        <p class="link-row project-end">
+          <a class="link-chevron" href="/projects">All projects</a>
+          <a class="link-chevron" href="/contact">Get in touch</a>
+        </p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-hero {
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 5.5rem) clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  }
+
+  .crumb {
+    color: var(--text-2);
+  }
+
+  h1 {
+    margin-top: var(--space-2);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .project-tagline {
+    max-width: 30ch;
+    margin-top: var(--space-4);
+    font-size: var(--fs-lead);
+    line-height: 1.3;
+    color: var(--text-2);
+  }
+
+  .project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+    margin-top: var(--space-6);
+  }
+
+  /* Phones: stacked, full-width controls that are easy to hit with a thumb. */
+  @media (max-width: 30rem) {
+    .project-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .project-actions .link-chevron {
+      justify-content: center;
+    }
+  }
+
+  .project-facts {
+    padding-block: var(--space-7);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4) var(--space-6);
+  }
+
+  .facts:not(:last-child) {
+    margin-bottom: var(--space-7);
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (min-width: 40rem) {
+    .facts {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .facts > div:nth-child(4) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .facts dt {
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .facts dd {
+    font-weight: var(--fw-medium);
+  }
+
+  /* Section links: sticky under the main nav, swipeable sideways on phones. */
+  .section-nav {
+    position: sticky;
+    top: var(--nav-height);
+    z-index: 40;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--fs-small);
+  }
+
+  .section-nav ul {
+    display: flex;
+    gap: var(--space-5);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .section-nav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    white-space: nowrap;
+    color: var(--text-2);
+  }
+
+  .section-nav a:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .project-body {
+    padding-block: var(--space-8) var(--section-pad);
+  }
+
+  /* Leave room for both sticky bars when jumping to a section. */
+  .project-body :global(h2) {
+    scroll-margin-top: calc(var(--nav-height) + 2.75rem + var(--space-5));
+  }
+
+  .project-end {
+    margin-top: var(--space-9);
+    font-size: var(--fs-body);
+  }
+</style>
+
+<script>
+  // "Copy link" copies the short link (e.g. https://adityabal.com/p/rag).
+  document.querySelectorAll<HTMLButtonElement>("[data-copy-link]").forEach((button) => {
+    const label = button.querySelector<HTMLElement>("[data-copy-label]");
+    const status = button.parentElement?.querySelector<HTMLElement>("[data-copy-status]");
+    const original = label?.textContent ?? "Copy link";
+    let timer: number | undefined;
+
+    button.addEventListener("click", async () => {
+      const url = button.dataset.copyLink ?? location.href;
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(url);
+        ok = true;
+      } catch {
+        // Clipboard API unavailable (older browser, insecure context): fall back to a prompt.
+        window.prompt("Copy this link", url);
+      }
+      if (!ok) return;
+      if (label) label.textContent = "Link copied";
+      if (status) status.textContent = `Link copied: ${url}`;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        if (label) label.textContent = original;
+      }, 2000);
+    });
+  });
+</script>

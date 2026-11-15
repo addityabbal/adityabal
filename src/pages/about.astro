@@ -1,0 +1,306 @@
+---
+// /about: bio, experience, education, recognition, talks, certifications, patent, skills.
+import { Image, getImage } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import portrait from "../assets/images/portrait.webp";
+import { bio, certifications, education, experience, patent, recognition, skills, talks } from "../data/about";
+import { personJsonLd, site } from "../data/site";
+
+const certificateLinks = await Promise.all(
+  certifications.map(async (cert) => (cert.image ? (await getImage({ src: cert.image, width: 1200, format: "webp" })).src : undefined)),
+);
+---
+<BaseLayout
+  path="/about"
+  title="About — Aditya Hemant Bal, Senior Product Manager"
+  description="Product leader with 11+ years at Jio Platforms, taking products from whiteboard to 10 million homes across video commerce, livestreaming, cloud computing and enterprise SaaS."
+  ogType="profile"
+  jsonLd={personJsonLd()}
+>
+  <section class="tone-base about-hero">
+    <div class="wrap about-hero-grid">
+      <div>
+        <p class="eyebrow">{site.jobTitle} · {site.employer} · {site.location.city}, India</p>
+        <h1>About.</h1>
+        <div class="prose bio">
+          {bio.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+        <p class="link-row">
+          <a class="link-chevron" href="/projects">See my projects</a>
+          <a class="link-chevron" href="/contact">Get in touch</a>
+        </p>
+      </div>
+      <Image
+        class="portrait"
+        src={portrait}
+        alt="Portrait of Aditya Hemant Bal"
+        widths={[240, 360, 520]}
+        sizes="(min-width: 48rem) 22rem, 11rem"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+
+  <section class="section tone-alt" aria-labelledby="experience">
+    <div class="wrap">
+      <SectionHeader id="experience" align="start" title="Experience." lead="Jio Platforms, 2014 to present." />
+      <ol class="roles">
+        {experience.map((role) => (
+          <li data-reveal>
+            <p class="row-meta">{role.period}</p>
+            <h3>{role.title}</h3>
+            <p class="role-company">{role.company}</p>
+            <ul class="prose role-bullets">
+              {role.bullets.map((bullet) => <li>{bullet}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section tone-base" aria-labelledby="education">
+    <div class="wrap">
+      <SectionHeader id="education" align="start" title="Education." />
+      <ul class="rows" data-reveal>
+        {education.map((item) => (
+          <li>
+            <p class="row-meta">{item.year}</p>
+            <div>
+              <h3 class="row-title">{item.degree}</h3>
+              <p class="row-text">{item.school}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tone-dark" aria-labelledby="recognition">
+    <div class="wrap">
+      <SectionHeader id="recognition" align="start" title="Recognition." lead="Awards and national stages." />
+      <ul class="bento">
+        {recognition.map((item) => (
+          <li class="card" data-reveal>
+            {item.image && (
+              <Image
+                src={item.image}
+                alt={item.imageAlt ?? ""}
+                widths={[400, 640, 900]}
+                sizes="(min-width: 48rem) 32rem, 92vw"
+                loading="lazy"
+              />
+            )}
+            <div class="card-body">
+              <p class="eyebrow">{item.year}</p>
+              <h3>{item.title}</h3>
+              <p>{item.summary}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tone-base" aria-labelledby="talks">
+    <div class="wrap">
+      <SectionHeader
+        id="talks"
+        align="start"
+        title="Talks."
+        lead="Invited as an industry expert to speak on AI and product management."
+      />
+      <ul class="bento">
+        {talks.map((talk) => (
+          <li class="card" data-reveal>
+            <Image
+              src={talk.image}
+              alt={talk.imageAlt}
+              widths={[400, 640, 900]}
+              sizes="(min-width: 48rem) 32rem, 92vw"
+              loading="lazy"
+            />
+            <div class="card-body">
+              <p class="eyebrow">{talk.kind} · {talk.date}</p>
+              <h3>{talk.title}</h3>
+              <p>{talk.summary}</p>
+              <p class="card-foot">{talk.host}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tone-alt" aria-labelledby="certifications">
+    <div class="wrap">
+      <SectionHeader id="certifications" align="start" title="Certifications." />
+      <ul class="rows" data-reveal>
+        {certifications.map((cert, index) => (
+          <li>
+            <p class="row-meta">{cert.date}</p>
+            <div>
+              <h3 class="row-title">{cert.title}</h3>
+              <p class="row-text">{cert.issuer}</p>
+              {(cert.verifyUrl || certificateLinks[index]) && (
+                <p class="link-row cert-links">
+                  {certificateLinks[index] && (
+                    <a class="link-chevron" href={certificateLinks[index]} aria-label={`View certificate: ${cert.title}`}>View certificate</a>
+                  )}
+                  {cert.verifyUrl && (
+                    <a class="link-chevron" href={cert.verifyUrl} rel="noopener" aria-label={`Verify: ${cert.title}`}>Verify</a>
+                  )}
+                </p>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tone-base" aria-labelledby="patent">
+    <div class="wrap">
+      <SectionHeader id="patent" align="start" title="Patent." />
+      <ul class="rows" data-reveal>
+        <li>
+          <p class="row-meta">{patent.status}</p>
+          <div>
+            <h3 class="row-title">{patent.title}</h3>
+            <p class="row-text">{patent.summary}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tone-alt" aria-labelledby="skills">
+    <div class="wrap">
+      <SectionHeader id="skills" align="start" title="Skills." />
+      <ul class="rows" data-reveal>
+        {skills.map((group) => (
+          <li>
+            <h3 class="row-meta skill-group">{group.group}</h3>
+            <p>{group.items.join(" · ")}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero {
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 6rem) var(--section-pad);
+  }
+
+  .about-hero-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  /* Phones: portrait first, small and round-cornered; text follows. */
+  .about-hero-grid :global(.portrait) {
+    order: -1;
+    width: 11rem;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-l);
+  }
+
+  @media (min-width: 48rem) {
+    .about-hero-grid {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      gap: var(--space-8);
+      align-items: start;
+    }
+
+    .about-hero-grid :global(.portrait) {
+      order: 0;
+      width: 100%;
+    }
+  }
+
+  h1 {
+    margin-top: var(--space-2);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .bio {
+    margin-block: var(--space-6);
+    font-size: var(--fs-lead);
+    line-height: 1.45;
+  }
+
+  .bio p:not(:first-child) {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .roles {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .roles h3 {
+    margin-top: var(--space-1);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .role-company {
+    color: var(--text-2);
+  }
+
+  .role-bullets {
+    margin-top: var(--space-5);
+  }
+
+  .card {
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    background: var(--tile);
+  }
+
+  .card :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  .card-body {
+    display: grid;
+    gap: var(--space-2);
+    padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  }
+
+  .card-body h3 {
+    font-size: var(--fs-h4);
+  }
+
+  .card-body p:not(.eyebrow) {
+    color: var(--text-2);
+  }
+
+  .card-body .card-foot {
+    font-size: var(--fs-small);
+  }
+
+  .cert-links {
+    margin-top: var(--space-1);
+    font-size: var(--fs-body);
+  }
+
+  .skill-group {
+    font-weight: var(--fw-regular);
+  }
+</style>

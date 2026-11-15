@@ -1,4 +1,155 @@
 ---
-import Site from "../components/Site.astro";
+// Homepage: positioning, AI projects, numbers, Jio platforms, recognition, contact.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import ProjectTile from "../components/ProjectTile.astro";
+import StatRow from "../components/StatRow.astro";
+import { getProjects, projectPath, typeLabels } from "../lib/projects";
+import { recognition, talks } from "../data/about";
+import { personJsonLd, site } from "../data/site";
+
+const projects = (await getProjects()).filter((project) => project.data.featured);
+const aiProjects = projects.filter((project) => project.data.type === "ai");
+const platforms = projects.filter((project) => project.data.type === "platform");
+
+const stats = [
+  { value: "10M+", label: "Households reached with JioPC" },
+  { value: "3.8M", label: "Users on Jio Games Watch" },
+  { value: "+15%", label: "Topline revenue lift from Jio Stream" },
+  { value: "11+", label: "Years in product management" },
+];
+
+const highlights = recognition.filter((item) => item.featured);
+const talkHost = talks[0]?.host;
 ---
-<Site />
+<BaseLayout path="/" ogType="profile" jsonLd={personJsonLd()}>
+  <!-- Old single-page hash links (/#about, /#casestudies …) now live on other pages. -->
+  <script is:inline slot="head">
+    (function () {
+      var map = {
+        "#about": "/about",
+        "#experience": "/about#experience",
+        "#awards": "/about#recognition",
+        "#talks": "/about#talks",
+        "#skills": "/about#skills",
+        "#casestudies": "/projects",
+        "#project-yoga-doc": "/projects/yoga-doc",
+        "#project-pdf-rag-chatbot": "/projects/pdf-rag-chatbot",
+      };
+      var target = map[location.hash];
+      if (!target) return;
+      var parts = target.split("#");
+      location.replace(parts[0] + location.search + (parts[1] ? "#" + parts[1] : ""));
+    })();
+  </script>
+
+  <Hero
+    eyebrow={`${site.name} · ${site.jobTitle}, Jio Platforms`}
+    title="Product leader who ships AI products."
+    lead="11+ years building platforms at scale at Jio. Two live AI demos you can try right now."
+    links={[
+      { href: "#projects", label: "Try the AI demos" },
+      { href: "/contact", label: "Get in touch" },
+    ]}
+  />
+
+  <section class="section tone-alt" aria-labelledby="projects">
+    <div class="wrap">
+      <SectionHeader
+        id="projects"
+        title="AI, shipped."
+        lead="Built, deployed and open-sourced. Each one runs live on this site."
+        links={[{ href: "/projects", label: "All projects" }]}
+      />
+      <div class="bento">
+        {aiProjects.map((project) => (
+          <ProjectTile
+            title={project.data.title}
+            tagline={project.data.tagline}
+            href={projectPath(project)}
+            label={typeLabels[project.data.type]}
+            demoUrl={project.data.demoUrl}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tone-base" aria-labelledby="scale">
+    <div class="wrap">
+      <SectionHeader id="scale" title="Built for scale." lead="Products that reached millions of homes across India." />
+      <StatRow items={stats} />
+    </div>
+  </section>
+
+  <section class="section tone-dark" aria-labelledby="products">
+    <div class="wrap">
+      <SectionHeader
+        id="products"
+        title="Platforms built at scale."
+        lead="Four products I built and scaled at Jio Platforms."
+        links={[{ href: "/about#experience", label: "See my experience" }]}
+      />
+      <div class="bento">
+        {platforms.map((project) => (
+          <ProjectTile
+            title={project.data.title}
+            tagline={project.data.tagline}
+            href={projectPath(project)}
+            label={project.data.year}
+            metric={project.data.metrics[0]}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tone-base" aria-labelledby="recognition">
+    <div class="wrap">
+      <SectionHeader
+        id="recognition"
+        title="Recognised for it."
+        lead="Awards, national stages and classrooms."
+        links={[{ href: "/about#recognition", label: "All recognition" }]}
+      />
+      <ul class="rows" data-reveal>
+        {highlights.map((item) => (
+          <li>
+            <p class="row-meta">{item.year}</p>
+            <div>
+              <h3 class="row-title">{item.title}</h3>
+              <p class="row-text">{item.summary}</p>
+            </div>
+          </li>
+        ))}
+        {talkHost && (
+          <li>
+            <p class="row-meta">2025</p>
+            <div>
+              <h3 class="row-title">Talks on AI and product management</h3>
+              <p class="row-text">
+                Invited as an industry expert to speak at {talkHost}: {talks.map((talk) => `“${talk.title}”`).join(" and ")}.
+              </p>
+            </div>
+          </li>
+        )}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tone-alt center" aria-labelledby="contact">
+    <div class="wrap">
+      <SectionHeader
+        id="contact"
+        title="Open to new conversations."
+        lead="A product role, a collaboration, or a good conversation about building at scale."
+      />
+      <p class="link-row center" data-reveal>
+        <Fragment set:html="<!--email_off-->" /><a class="link-chevron" href={`mailto:${site.email}`}>Email me</a><Fragment set:html="<!--/email_off-->" />
+        <a class="link-chevron" href={site.linkedin} rel="me noopener">LinkedIn</a>
+        <a class="link-chevron" href="/contact">All contact details</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

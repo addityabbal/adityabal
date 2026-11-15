@@ -269,3 +269,120 @@ button {
 .prose blockquote strong {
   font-weight: var(--fw-bold);
 }
+
+/* ── Mobile: respect notches and rounded corners; never scroll sideways ── */
+.wrap {
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+
+body {
+  overflow-wrap: break-word;
+}
+
+/* Inline text links get a comfortable tap area without changing layout. */
+.link-row a,
+.tap {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+/* ── Bento grid of rounded tiles: one column on phones, two from tablet up ── */
+.bento {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@media (min-width: 48rem) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+}
+
+/* ── Primary call to action (the only filled control) ──────────────────── */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.7rem 1.4rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+}
+
+.cta:hover {
+  text-decoration: none;
+  filter: brightness(1.08);
+}
+
+/* Dark-theme accent is light, so filled controls use dark text there to keep AA contrast. */
+:root[data-theme="dark"] .cta,
+.tone-dark .cta {
+  color: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .cta {
+    color: #000;
+  }
+}
+
+.cta-quiet {
+  background: none;
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+:root[data-theme="dark"] .cta-quiet,
+.tone-dark .cta-quiet {
+  color: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .cta-quiet {
+    color: var(--accent);
+  }
+}
+
+/* ── Simple ruled list rows (recognition, certifications, education) ───── */
+.rows {
+  border-top: 1px solid var(--border);
+}
+
+.rows > li {
+  display: grid;
+  gap: var(--space-1) var(--space-6);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 48rem) {
+  .rows > li {
+    grid-template-columns: 9rem minmax(0, 1fr);
+  }
+}
+
+.rows .row-meta {
+  font-size: var(--fs-small);
+  color: var(--text-2);
+}
+
+.rows .row-title {
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--lh-snug);
+}
+
+.rows .row-text {
+  margin-top: var(--space-1);
+  color: var(--text-2);
+}
