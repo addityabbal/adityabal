@@ -70,7 +70,7 @@ featured: true            # show on the homepage
 
 All seven headings are required, in that order; the build fails with a clear message otherwise. The project page, index entry, short link, sitemap entry and 1200×630 link-preview image are generated from the file.
 
-A blockquote starting with `**TODO (Aditya):**` renders as a highlighted note. Search for `TODO (Aditya)` to find content still to write.
+A blockquote starting with `**TODO (Aditya):**` is a note to yourself. It shows as a highlighted note in `npm run dev` and is removed from production builds, along with any section that has nothing else in it yet (the section reappears once it has content). Search for `TODO (Aditya)` to find content still to write.
 
 ## Where things live
 

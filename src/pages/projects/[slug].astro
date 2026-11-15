@@ -34,7 +34,24 @@ if (found.join(",") !== PROJECT_SECTIONS.join(",")) {
       `${PROJECT_SECTIONS.join(", ")}. Found: ${found.join(", ") || "none"}.`,
   );
 }
-const sections = headings.filter((heading) => heading.depth === 2);
+
+// "TODO (Aditya)" notes are for the author. They show in `npm run dev` and are removed from
+// production builds, together with any section that has nothing else in it yet.
+const hideTodos = import.meta.env.PROD;
+const emptySections: string[] = [];
+let publicHtml = "";
+if (hideTodos) {
+  publicHtml = (project.rendered?.html ?? "")
+    .replace(/<blockquote>\s*<p>\s*<strong>TODO[\s\S]*?<\/blockquote>/g, "")
+    .replace(/<h2 id="([^"]+)">(?:(?!<\/h2>)[\s\S])*<\/h2>\s*(?=<h2 |$)/g, (_match, id: string) => {
+      emptySections.push(id);
+      return "";
+    });
+  if (/TODO \(Aditya\)/.test(publicHtml)) {
+    throw new Error(`src/content/projects/${project.id}.md: a TODO note is not a "> **TODO (Aditya):** …" blockquote, so it cannot be hidden.`);
+  }
+}
+const sections = headings.filter((heading) => heading.depth === 2 && !emptySections.includes(heading.slug));
 
 const path = projectPath(project);
 const shortUrl = absoluteUrl(shortPath(project));
@@ -126,7 +143,7 @@ const facts = [
     <div class="tone-base project-body">
       <div class="wrap">
         <div class="prose">
-          <Content />
+          {hideTodos ? <Fragment set:html={publicHtml} /> : <Content />}
         </div>
         <p class="link-row project-end">
           <a class="link-chevron" href="/projects">All projects</a>
