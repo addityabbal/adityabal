@@ -21,7 +21,7 @@ import { site } from "../data/site";
       <ul class="channels">
         <li>
           <p class="eyebrow">Email</p>
-          <Fragment set:html="<!--email_off-->" /><a href={`mailto:${site.email}`}>{site.email}</a><Fragment set:html="<!--/email_off-->" />
+          <!--email_off--><a href={`mailto:${site.email}`}>{site.email}</a><!--/email_off-->
         </li>
         <li>
           <p class="eyebrow">LinkedIn</p>

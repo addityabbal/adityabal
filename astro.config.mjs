@@ -2,10 +2,13 @@
 import { defineConfig } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
+import ogImages from './src/integrations/og-images.mjs';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://adityabal.com',
+  // Generates link-preview images into public/og before each build.
+  integrations: [ogImages()],
   // Canonical URLs have no trailing slash: /projects/yoga-doc
   trailingSlash: 'never',
   adapter: cloudflare({

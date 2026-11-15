@@ -38,7 +38,7 @@ const sections = headings.filter((heading) => heading.depth === 2);
 
 const path = projectPath(project);
 const shortUrl = absoluteUrl(shortPath(project));
-const pageTitle = `${data.title} — ${data.tagline.replace(/\.$/, "")} | ${site.shortName}`;
+const pageTitle = `${data.title} — ${typeLabels[data.type]} by ${site.shortName}`;
 const description = `${data.tagline} ${typeLabels[data.type]} by ${site.name}, ${data.year}.`;
 
 const jsonLd =

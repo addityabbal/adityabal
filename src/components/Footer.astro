@@ -11,7 +11,7 @@ const year = new Date().getFullYear();
       ))}
       <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>
       <li><a href={site.github} rel="me noopener">GitHub</a></li>
-      <li><Fragment set:html="<!--email_off-->" /><a href={`mailto:${site.email}`}>Email</a><Fragment set:html="<!--/email_off-->" /></li>
+      <li><!--email_off--><a href={`mailto:${site.email}`}>Email</a><!--/email_off--></li>
     </ul>
     <p class="footer-legal">© {year} {site.name}. {site.location.city}, India.</p>
   </div>
