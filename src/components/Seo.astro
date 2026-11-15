@@ -1,0 +1,61 @@
+---
+// Head metadata for every page: title, description, canonical, Open Graph, Twitter card, JSON-LD.
+import { site, absoluteUrl } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Canonical path, lowercase, no trailing slash (except "/"). */
+  path: string;
+  /** Site-relative or absolute image URL, 1200x630. */
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: "website" | "profile" | "article";
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title = site.defaultTitle,
+  description = site.defaultDescription,
+  path,
+  ogImage = "/og-image.jpg",
+  ogImageAlt = title,
+  ogType = "website",
+  jsonLd,
+  noindex = false,
+} = Astro.props;
+
+const canonical = absoluteUrl(path);
+const image = absoluteUrl(ogImage);
+const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="author" content={site.name} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content="en_IN" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogImageAlt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
+
+<meta name="geo.region" content={site.location.regionCode} />
+<meta name="geo.placename" content={`${site.location.city}, ${site.location.region}, India`} />
+<meta name="geo.position" content={`${site.location.lat};${site.location.lon}`} />
+<meta name="ICBM" content={`${site.location.lat}, ${site.location.lon}`} />
+
+{schemas.map((schema) => <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />)}

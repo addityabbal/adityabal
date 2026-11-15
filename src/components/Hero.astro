@@ -1,0 +1,78 @@
+---
+// Page-opening block: one very large headline, one supporting line, up to two text links.
+// Optional default slot renders below the links (portrait, demo call-out, metadata).
+interface Link {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  links?: Link[];
+  tone?: "base" | "alt" | "dark";
+  size?: "display" | "page";
+  align?: "center" | "start";
+}
+
+const { eyebrow, title, lead, links = [], tone = "base", size = "display", align = "center" } = Astro.props;
+---
+<section class:list={["hero", `tone-${tone}`, `hero-${size}`, { center: align === "center" }]}>
+  <div class="wrap hero-inner">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="hero-lead">{lead}</p>}
+    {links.length > 0 && (
+      <p class="link-row">
+        {links.map((link) => (
+          <a class="link-chevron" href={link.href}>{link.label}</a>
+        ))}
+      </p>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(4rem, 2rem + 9vw, 9rem) var(--section-pad);
+  }
+
+  .hero-page {
+    padding-block: clamp(3.5rem, 2rem + 6vw, 6.5rem) clamp(3rem, 2rem + 4vw, 5rem);
+  }
+
+  .hero-inner {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .center .hero-inner {
+    justify-items: center;
+  }
+
+  h1 {
+    max-width: 16ch;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .hero-page h1 {
+    max-width: 20ch;
+    font-size: var(--fs-h1);
+  }
+
+  .hero-lead {
+    max-width: 38ch;
+    font-size: var(--fs-lead);
+    line-height: 1.35;
+    color: var(--text-2);
+  }
+
+  .hero-page .hero-lead {
+    max-width: 46ch;
+  }
+</style>

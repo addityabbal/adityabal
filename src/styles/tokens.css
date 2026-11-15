@@ -1,0 +1,147 @@
+/* Design tokens: the single source of truth for colour, type, spacing and radius.
+   Components read these variables only; no raw colour or size values elsewhere. */
+
+:root {
+  /* ── Type ─────────────────────────────────────────────────────────────── */
+  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --fs-display: clamp(2.75rem, 1.6rem + 6.2vw, 6rem);
+  --fs-h1: clamp(2.5rem, 1.7rem + 4.2vw, 4.5rem);
+  --fs-h2: clamp(2rem, 1.45rem + 2.8vw, 3.5rem);
+  --fs-h3: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  --fs-h4: 1.25rem;
+  --fs-lead: clamp(1.1875rem, 1.05rem + 0.7vw, 1.5rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem;
+
+  --lh-tight: 1.05;
+  --lh-snug: 1.2;
+  --lh-body: 1.55;
+
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.022em;
+  --tracking-body: -0.011em;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* ── Spacing (4px base) ───────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  --section-pad: clamp(4rem, 2.5rem + 7vw, 8.5rem);
+  --gutter: clamp(1.25rem, 0.5rem + 3.5vw, 3rem);
+  --content-max: 68rem;
+  --prose-max: 42rem;
+  --nav-height: 3rem;
+
+  /* ── Radius ───────────────────────────────────────────────────────────── */
+  --radius-s: 0.5rem;
+  --radius-m: 1rem;
+  --radius-l: 1.75rem;
+  --radius-pill: 62rem;
+
+  /* ── Motion ───────────────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-reveal: 700ms;
+
+  /* ── Colour: light theme (default) ────────────────────────────────────── */
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-alt: #f5f5f7;
+  --tile: #f5f5f7;
+  --tile-on-alt: #ffffff;
+  --text: #1d1d1f;
+  --text-2: #6e6e73;
+  --accent: #0066cc;
+  --border: rgba(0, 0, 0, 0.12);
+  --nav-bg: rgba(255, 255, 255, 0.72);
+  --todo-bg: #fff4ce;
+  --todo-text: #5c4400;
+}
+
+/* Dark values, declared once as a mixin-like block and applied in three places:
+   system preference, explicit toggle, and always-dark sections. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #000000;
+    --bg-alt: #1d1d1f;
+    --tile: #1d1d1f;
+    --tile-on-alt: #000000;
+    --text: #f5f5f7;
+    --text-2: #a1a1a6;
+    --accent: #2997ff;
+    --border: rgba(255, 255, 255, 0.16);
+    --nav-bg: rgba(0, 0, 0, 0.72);
+    --todo-bg: #3a2f00;
+    --todo-text: #ffe08a;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-alt: #1d1d1f;
+  --tile: #1d1d1f;
+  --tile-on-alt: #000000;
+  --text: #f5f5f7;
+  --text-2: #a1a1a6;
+  --accent: #2997ff;
+  --border: rgba(255, 255, 255, 0.16);
+  --nav-bg: rgba(0, 0, 0, 0.72);
+  --todo-bg: #3a2f00;
+  --todo-text: #ffe08a;
+}
+
+/* Section tones. `tone-alt` is the secondary surface of the current theme.
+   `tone-dark` is near-black in the light theme and the secondary surface in the dark theme,
+   so sections keep alternating in both. */
+.tone-base {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.tone-alt {
+  --tile: var(--tile-on-alt);
+  background: var(--bg-alt);
+  color: var(--text);
+}
+
+.tone-dark {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-alt: #1d1d1f;
+  --tile: #1d1d1f;
+  --text: #f5f5f7;
+  --text-2: #a1a1a6;
+  --accent: #2997ff;
+  --border: rgba(255, 255, 255, 0.16);
+  background: var(--bg);
+  color: var(--text);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tone-dark {
+    --bg: #1d1d1f;
+    --tile: #000000;
+  }
+}
+
+:root[data-theme="dark"] .tone-dark {
+  --bg: #1d1d1f;
+  --tile: #000000;
+}

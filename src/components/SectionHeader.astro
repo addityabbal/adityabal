@@ -1,0 +1,59 @@
+---
+// Section opener: headline, one supporting line, up to two text links. One point per section.
+interface Link {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  links?: Link[];
+  align?: "center" | "start";
+  level?: 2 | 3;
+}
+
+const { id, eyebrow, title, lead, links = [], align = "center", level = 2 } = Astro.props;
+const Heading = `h${level}` as "h2" | "h3";
+---
+<header class:list={["section-header", { center: align === "center" }]} data-reveal>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Heading id={id} class="section-title">{title}</Heading>
+  {lead && <p class="section-lead">{lead}</p>}
+  {links.length > 0 && (
+    <p class="link-row">
+      {links.map((link) => (
+        <a class="link-chevron" href={link.href}>{link.label}</a>
+      ))}
+    </p>
+  )}
+</header>
+
+<style>
+  .section-header {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+  }
+
+  .section-header.center {
+    justify-items: center;
+  }
+
+  .section-title {
+    max-width: 20ch;
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+  }
+
+  .section-lead {
+    max-width: 44ch;
+    font-size: var(--fs-lead);
+    line-height: 1.35;
+    color: var(--text-2);
+  }
+</style>

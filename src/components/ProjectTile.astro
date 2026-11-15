@@ -1,0 +1,102 @@
+---
+// One rounded tile in the project bento grid: label, name, one line, two text links.
+interface Props {
+  title: string;
+  tagline: string;
+  href: string;
+  label: string;
+  demoUrl?: string;
+  /** One headline number for the tile, e.g. { value: "10M+", label: "households" }. */
+  metric?: { value: string; label: string };
+  /** `wide` spans the full grid width on large screens. */
+  size?: "standard" | "wide";
+  headingLevel?: 2 | 3;
+  type?: string;
+}
+
+const { title, tagline, href, label, demoUrl, metric, size = "standard", headingLevel = 3, type } = Astro.props;
+const Heading = `h${headingLevel}` as "h2" | "h3";
+---
+<article class:list={["tile", `tile-${size}`]} data-type={type} data-reveal>
+  <p class="eyebrow">{label}</p>
+  <Heading class="tile-title">{title}</Heading>
+  <p class="tile-tagline">{tagline}</p>
+  {metric && (
+    <p class="tile-metric">
+      <span class="tile-metric-value">{metric.value}</span>
+      <span class="tile-metric-label">{metric.label}</span>
+    </p>
+  )}
+  <p class="link-row tile-links">
+    <a class="link-chevron" href={href} aria-label={`Learn more about ${title}`}>Learn more</a>
+    {demoUrl && <a class="link-chevron" href={demoUrl} aria-label={`Try the ${title} demo`}>Try the demo</a>}
+  </p>
+</article>
+
+<style>
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-height: 19rem;
+    padding: clamp(1.75rem, 1.25rem + 2vw, 3rem);
+    border-radius: var(--radius-l);
+    background: var(--tile);
+  }
+
+  .tile-title {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-bold);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-display);
+  }
+
+  .tile-wide .tile-title {
+    font-size: var(--fs-h2);
+  }
+
+  .tile-tagline {
+    max-width: 34ch;
+    font-size: var(--fs-lead);
+    line-height: 1.3;
+    color: var(--text-2);
+  }
+
+  .tile-metric {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .tile-metric-value {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .tile-metric-label {
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .tile-links {
+    margin-top: auto;
+    padding-top: var(--space-5);
+    font-size: var(--fs-body);
+  }
+
+  @media (min-width: 48rem) {
+    .tile-wide {
+      grid-column: 1 / -1;
+      align-items: center;
+      text-align: center;
+    }
+
+    .tile-wide .tile-links,
+    .tile-wide .tile-metric {
+      justify-content: center;
+    }
+  }
+</style>

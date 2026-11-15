@@ -1,0 +1,52 @@
+---
+// A row of large numbers, each with a short label. Static text: no counting animation.
+interface Props {
+  items: { value: string; label: string }[];
+  label?: string;
+}
+
+const { items, label = "Key numbers" } = Astro.props;
+---
+<dl class="stat-row" aria-label={label} data-reveal>
+  {items.map((item) => (
+    <div class="stat">
+      <dt class="stat-label">{item.label}</dt>
+      <dd class="stat-value">{item.value}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .stat-row {
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--space-2);
+  }
+
+  .stat-value {
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    max-width: 18ch;
+    font-size: var(--fs-small);
+    line-height: 1.35;
+    color: var(--text-2);
+  }
+</style>
