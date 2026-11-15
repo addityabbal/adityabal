@@ -45,6 +45,7 @@ const filters = [
             label={`${typeLabels[project.data.type]} · ${project.data.year}`}
             demoUrl={project.data.demoUrl}
             metric={project.data.type === "platform" ? project.data.metrics[0] : undefined}
+            logo={project.data.logo}
           />
         ))}
       </div>

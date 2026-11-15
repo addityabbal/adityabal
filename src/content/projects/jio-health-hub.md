@@ -15,6 +15,7 @@ metrics:
     label: "people on the Lab Test Booking team"
 pressUrl: "https://telecom.economictimes.indiatimes.com/news/reliance-jios-health-and-fitness-app-goes-live/56595479"
 pressLabel: "Economic Times: Reliance Jio's health and fitness app goes live"
+logo: "../../assets/images/logo-jio-health-hub.svg"
 order: 6
 featured: true
 ---

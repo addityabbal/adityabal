@@ -8,7 +8,7 @@ const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const projects = defineCollection({
   loader: glob({ pattern: "*.md", base: "./src/content/projects" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     /** Canonical URL segment: /projects/<slug>. Never change once live. */
     slug: z.string().regex(slugPattern),
@@ -27,6 +27,8 @@ const projects = defineCollection({
     pressLabel: z.string().optional(),
     /** Override for the generated 1200x630 link-preview image. */
     ogImage: z.string().optional(),
+    /** Product logo, path relative to the markdown file. */
+    logo: image().optional(),
     order: z.number(),
     featured: z.boolean().default(false),
   }),

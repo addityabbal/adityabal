@@ -1,5 +1,7 @@
 ---
 // One rounded tile in the project bento grid: label, name, one line, two text links.
+import type { ImageMetadata } from "astro";
+
 interface Props {
   title: string;
   tagline: string;
@@ -12,12 +14,15 @@ interface Props {
   size?: "standard" | "wide";
   headingLevel?: 2 | 3;
   type?: string;
+  /** Product logo. Wordmark logos are cropped to their round icon so they read on any surface. */
+  logo?: ImageMetadata;
 }
 
-const { title, tagline, href, label, demoUrl, metric, size = "standard", headingLevel = 3, type } = Astro.props;
+const { title, tagline, href, label, demoUrl, metric, size = "standard", headingLevel = 3, type, logo } = Astro.props;
 const Heading = `h${headingLevel}` as "h2" | "h3";
 ---
 <article class:list={["tile", `tile-${size}`]} data-type={type} data-reveal>
+  {logo && <img class="tile-logo" src={logo.src} alt="" width="48" height="48" loading="lazy" decoding="async" />}
   <p class="eyebrow">{label}</p>
   <Heading class="tile-title">{title}</Heading>
   <p class="tile-tagline">{tagline}</p>
@@ -42,6 +47,15 @@ const Heading = `h${headingLevel}` as "h2" | "h3";
     padding: clamp(1.75rem, 1.25rem + 2vw, 3rem);
     border-radius: var(--radius-l);
     background: var(--tile);
+  }
+
+  .tile-logo {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: var(--space-2);
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: left center;
   }
 
   .tile-title {

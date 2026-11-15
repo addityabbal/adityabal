@@ -19,6 +19,7 @@ metrics:
     label: "creators earning"
 pressUrl: "https://www.livemint.com/technology/tech-news/jiogameswatch-streaming-platform-launched-what-is-it-how-it-will-help-gamers-11659773062673.html"
 pressLabel: "Livemint: JioGamesWatch streaming platform launched"
+logo: "../../assets/images/logo-jio-games-watch.svg"
 order: 4
 featured: true
 ---

@@ -15,6 +15,7 @@ metrics:
     label: "demo booths led at India Mobile Congress 2025"
 pressUrl: "https://techcrunch.com/2025/07/11/indias-richest-man-wants-to-turn-every-tv-into-a-pc/"
 pressLabel: "TechCrunch: India's richest man wants to turn every TV into a PC"
+logo: "../../assets/images/logo-jiopc.svg"
 order: 3
 featured: true
 ---

@@ -20,6 +20,11 @@ const { eyebrow, title, lead, links = [], tone = "base", size = "display", align
 ---
 <section class:list={["hero", `tone-${tone}`, `hero-${size}`, { center: align === "center" }]}>
   <div class="wrap hero-inner">
+    {Astro.slots.has("media") && (
+      <div class="hero-media">
+        <slot name="media" />
+      </div>
+    )}
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{title}</h1>
     {lead && <p class="hero-lead">{lead}</p>}
@@ -50,6 +55,19 @@ const { eyebrow, title, lead, links = [], tone = "base", size = "display", align
 
   .center .hero-inner {
     justify-items: center;
+  }
+
+  /* Round portrait above the headline. */
+  .hero-media :global(img) {
+    width: clamp(7rem, 5.5rem + 6vw, 9rem);
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .hero:has(.hero-media) {
+    padding-top: clamp(2.5rem, 1.5rem + 5vw, 5rem);
   }
 
   h1 {

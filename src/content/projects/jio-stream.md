@@ -19,6 +19,7 @@ metrics:
     label: "support tickets"
 pressUrl: "https://stream.jio/"
 pressLabel: "stream.jio: official Jio Stream platform"
+logo: "../../assets/images/logo-jio-stream.svg"
 order: 5
 featured: true
 ---

@@ -1,5 +1,6 @@
 ---
-// Homepage: positioning, AI projects, numbers, Jio platforms, recognition, contact.
+// Homepage: shortcuts, positioning, numbers, AI projects, Jio platforms, recognition, contact.
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import SectionHeader from "../components/SectionHeader.astro";
@@ -8,6 +9,7 @@ import StatRow from "../components/StatRow.astro";
 import { getProjects, projectPath, typeLabels } from "../lib/projects";
 import { recognition, talks } from "../data/about";
 import { personJsonLd, site } from "../data/site";
+import portrait from "../assets/images/portrait.webp";
 
 const projects = (await getProjects()).filter((project) => project.data.featured);
 const aiProjects = projects.filter((project) => project.data.type === "ai");
@@ -22,6 +24,12 @@ const stats = [
 
 const highlights = recognition.filter((item) => item.featured);
 const talkHost = talks[0]?.host;
+
+const shortcuts = [
+  { href: "/about#recognition", label: "Recognition" },
+  { href: "/about#talks", label: "Talks" },
+  { href: "/about#certifications", label: "Certifications" },
+];
 ---
 <BaseLayout path="/" ogType="profile" jsonLd={personJsonLd()}>
   <!-- Old single-page hash links (/#about, /#casestudies …) now live on other pages. -->
@@ -44,6 +52,14 @@ const talkHost = talks[0]?.host;
     })();
   </script>
 
+  <nav class="shortcuts" aria-label="Shortcuts">
+    <ul class="wrap">
+      {shortcuts.map((link) => (
+        <li><a href={link.href}>{link.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+
   <Hero
     eyebrow={`${site.name} · ${site.jobTitle}, Jio Platforms`}
     title="Product Leadership for AI era"
@@ -52,9 +68,27 @@ const talkHost = talks[0]?.host;
       { href: "#projects", label: "Try the AI demos" },
       { href: "/contact", label: "Get in touch" },
     ]}
-  />
+  >
+    <Image
+      slot="media"
+      src={portrait}
+      alt="Portrait of Aditya Hemant Bal"
+      width={288}
+      height={288}
+      densities={[1, 2]}
+      loading="eager"
+      fetchpriority="high"
+    />
+  </Hero>
 
-  <section class="section tone-alt" aria-labelledby="projects">
+  <section class="section tone-alt" aria-labelledby="scale">
+    <div class="wrap">
+      <SectionHeader id="scale" title="Built for scale" lead="Products that reached millions of homes across India." />
+      <StatRow items={stats} />
+    </div>
+  </section>
+
+  <section class="section tone-base" aria-labelledby="projects">
     <div class="wrap">
       <SectionHeader
         id="projects"
@@ -76,13 +110,6 @@ const talkHost = talks[0]?.host;
     </div>
   </section>
 
-  <section class="section tone-base" aria-labelledby="scale">
-    <div class="wrap">
-      <SectionHeader id="scale" title="Built for scale" lead="Products that reached millions of homes across India." />
-      <StatRow items={stats} />
-    </div>
-  </section>
-
   <section class="section tone-dark" aria-labelledby="products">
     <div class="wrap">
       <SectionHeader
@@ -99,6 +126,7 @@ const talkHost = talks[0]?.host;
             href={projectPath(project)}
             label={project.data.year}
             metric={project.data.metrics[0]}
+            logo={project.data.logo}
           />
         ))}
       </div>
@@ -153,3 +181,32 @@ const talkHost = talks[0]?.host;
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  /* Quick links at the top left of the homepage; swipeable if they ever outgrow a phone screen. */
+  .shortcuts {
+    border-bottom: 1px solid var(--border);
+    font-size: var(--fs-small);
+  }
+
+  .shortcuts ul {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--space-5);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .shortcuts a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    white-space: nowrap;
+    color: var(--text-2);
+  }
+
+  .shortcuts a:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+</style>
