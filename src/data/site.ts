@@ -14,7 +14,7 @@ export const site = {
   github: "https://github.com/addityabbal",
   defaultTitle: "Aditya Hemant Bal — Senior Product Manager building AI products",
   defaultDescription:
-    "Senior Product Manager at Jio Platforms with 11+ years building digital products at scale. Live AI demos, plus JioPC, Jio Games Watch, Jio Stream and Jio Health Hub.",
+    "Senior Product Manager at Jio Platforms with 12+ years building digital products at scale. Live AI demos, plus JioPC, Jio Games Watch, Jio Stream and Jio Health Hub.",
 } as const;
 
 export const navLinks = [
@@ -38,7 +38,7 @@ export function personJsonLd() {
     familyName: "Bal",
     jobTitle: site.jobTitle,
     description:
-      "Product Management Professional with 11+ years of experience leading end-to-end delivery of digital products across web and mobile platforms. Specialising in video commerce, livestreaming, creator ecosystems, and cloud computing.",
+      "Product Management Professional with 12+ years of experience leading end-to-end delivery of digital products across web and mobile platforms. Specialising in video commerce, livestreaming, creator ecosystems, and cloud computing.",
     url: site.url,
     image: absoluteUrl("/portrait.webp"),
     email: site.email,

@@ -91,7 +91,7 @@ async function generate(root, logger) {
   const home = await render(
     card({
       label: "Senior Product Manager, Jio Platforms",
-      title: "Product leader who ships AI products.",
+      title: "I lead products and ship AI.",
       tagline: "Live AI demos, and platforms built at scale.",
       footer: "adityabal.com",
     }),

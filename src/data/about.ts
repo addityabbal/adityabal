@@ -16,9 +16,9 @@ import certSql from "../assets/images/cert-sql.webp";
 import certWebApis from "../assets/images/cert-web-apis.webp";
 
 export const bio: string[] = [
-  "I'm a product leader who believes the best products are built at the intersection of deep user empathy, engineering rigour, and business clarity. Over 11+ years at Jio Platforms, I've taken products from whiteboard to 10 million homes.",
+  "I'm a product leader who believes the best products are built at the intersection of deep user empathy, engineering rigour, and business clarity. Over 12+ years at Jio Platforms, I've taken products from whiteboard to 10 million homes.",
   "My work spans video commerce, livestreaming, creator ecosystems, cloud computing, and enterprise SaaS. I've led cross-functional teams of 30+, mentored product managers, and represented Jio on national stages, including a demo visited by the Prime Minister.",
-  "I hold an MBA in Marketing & Strategy from Great Lakes and a B.Tech in Electronics from Manipal. I'm a Certified Scrum Product Owner (CSPO) and hold a Green Belt in Lean Six Sigma.",
+  "I hold an MBA in Marketing & Strategy from Great Lakes and a B.Tech in Electronics from Manipal. I earned the Certified Scrum Product Owner (CSPO) certification in 2024 and hold a Green Belt in Lean Six Sigma.",
   "Outside work, I bring the same curiosity to people, languages, and ideas. I speak English, Hindi, Marathi, and Gujarati.",
 ];
 
@@ -41,7 +41,7 @@ export const experience: Role[] = [
       "Launched Jio Games Watch and scaled it to 3.8M+ users, 53K+ videos, and 14K+ active content creators.",
       "Scaled the Jio Stream video commerce platform: +15% topline revenue, 2.5× CTR, 6.04K+ product clicks.",
       "Built creator payout administration and finance reconciliation; lifted monetised-creator coverage to 3.5K+.",
-      "Principal PM on enterprise admin platforms: users, licences, roles and permissions, RBAC, SSO/SAML/OIDC, SCIM provisioning.",
+      "Product manager for enterprise admin platforms: users, licences, roles and permissions, RBAC, SSO/SAML/OIDC, SCIM provisioning.",
       "Led a 12-member AI demo team at Global AI Summit 2023, visited by PM Narendra Modi.",
       "Presented at India Mobile Congress 2023 and 2024, and led 10 JioPC demo booths at IMC 2025.",
     ],
@@ -154,8 +154,7 @@ export const certifications: Certification[] = [
   {
     title: "Certified Scrum Product Owner® (CSPO)",
     issuer: "Scrum Alliance",
-    // FLAGGED FOR ADITYA: "Active until Feb 2026" has passed. Claim left unchanged on purpose; update or renew.
-    date: "Feb 25, 2024 · Active until Feb 2026",
+    date: "Earned Feb 25, 2024",
     verifyUrl: "https://www.scrumalliance.org/community/profile/abal67",
     image: certCspo,
   },

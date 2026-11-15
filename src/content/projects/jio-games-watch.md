@@ -2,14 +2,14 @@
 title: "Jio Games Watch"
 slug: "jio-games-watch"
 shortSlug: "watch"
-tagline: "A livestreaming and creator economy platform with 3.8M users."
+tagline: "A livestreaming and creator economy platform with 3.8M+ users."
 type: "platform"
 status: "live"
 year: "2021 – Present"
 role: "Senior Product Manager, Jio Platforms"
 stack: ["Livestreaming", "Creator Economy", "Monetisation"]
 metrics:
-  - value: "3.8M"
+  - value: "3.8M+"
     label: "users"
   - value: "53K+"
     label: "videos hosted"
@@ -25,7 +25,7 @@ featured: true
 
 ## Overview
 
-A livestreaming and creator economy platform that grew to 3.8M users, hosting 53K+ videos and 14K+ active creators. I launched the platform and built the full creator payout and monetisation infrastructure, enabling 3.5K+ creators to earn.
+A livestreaming and creator economy platform that grew to 3.8M+ users, hosting 53K+ videos and 14K+ active creators. I launched the platform and built the full creator payout and monetisation infrastructure, enabling 3.5K+ creators to earn.
 
 ## Problem
 
@@ -50,7 +50,7 @@ Press: [Livemint: JioGamesWatch streaming platform launched](https://www.livemin
 
 ## Results
 
-- 3.8M users.
+- 3.8M+ users.
 - 53K+ videos hosted.
 - 14K+ active content creators.
 - Monetised-creator coverage lifted to 3.5K+.
