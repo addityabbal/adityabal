@@ -28,8 +28,8 @@ const Heading = `h${headingLevel}` as "h2" | "h3";
     </p>
   )}
   <p class="link-row tile-links">
-    <a class="link-chevron" href={href} aria-label={`Learn more about ${title}`}>Learn more</a>
-    {demoUrl && <a class="link-chevron" href={demoUrl} aria-label={`Try the ${title} demo`}>Try the demo</a>}
+    <a class="link-chevron" href={href}><span>Learn more<span class="visually-hidden"> about {title}</span></span></a>
+    {demoUrl && <a class="link-chevron" href={demoUrl}><span>Try the<span class="visually-hidden"> {title}</span> demo</span></a>}
   </p>
 </article>
 
