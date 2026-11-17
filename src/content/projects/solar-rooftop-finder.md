@@ -15,7 +15,7 @@ metrics:
     label: "to find, measure and rank them"
   - value: "Top 50"
     label: "roofs shortlisted per pincode"
-demoUrl: "https://solar.adityabal.com/p/380015"
+demoUrl: "https://solar.adityabal.com"
 order: 0
 featured: true
 ---
@@ -50,7 +50,7 @@ The obvious shortcut, scraping phone numbers for every home, is both unlawful un
 
 ## Demo
 
-[Open the live demo](https://solar.adityabal.com/p/380015) for pincode 380015 in Ahmedabad.
+[Open the live demo](https://solar.adityabal.com) and pick a pre-scanned pincode: [380015](https://solar.adityabal.com/p/380015) in Ahmedabad, [400703](https://solar.adityabal.com/p/400703) in Vashi or [400709](https://solar.adityabal.com/p/400709) in Koparkhairane, both in Navi Mumbai. Other pincodes need the live scanner, which is built but not switched on in this demo.
 
 The demo runs on open building data alone. Google's Solar, Geocoding and Places APIs are wired into the pipeline but switched off here, so usable area is estimated as half of each footprint, the pincode boundary is an approximate rectangle, and the booking form is disabled so no personal details are collected. The [campaign dashboard](https://solar.adityabal.com/campaigns/380015) and postcard downloads work.
 
