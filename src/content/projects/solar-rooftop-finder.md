@@ -16,6 +16,7 @@ metrics:
   - value: "Top 50"
     label: "roofs shortlisted per pincode"
 demoUrl: "https://solar.adityabal.com"
+repoUrl: "https://github.com/addityabbal/solar-rooftop-finder"
 order: 0
 featured: true
 ---
