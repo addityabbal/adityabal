@@ -63,7 +63,7 @@ const shortcuts = [
   <Hero
     eyebrow={`${site.name} · ${site.jobTitle}, Jio Platforms`}
     title="Product Leadership for AI era"
-    lead="12+ years building platforms at scale at Jio. Two live AI demos you can try right now."
+    lead="12+ years building platforms at scale at Jio. Three live demos you can try right now."
     links={[
       { href: "#projects", label: "Try the AI demos" },
       { href: "/contact", label: "Get in touch" },
@@ -93,12 +93,13 @@ const shortcuts = [
       <SectionHeader
         id="projects"
         title="AI, shipped"
-        lead="Built, deployed and open-sourced. Each one runs live on this site."
+        lead="Built and deployed end to end. Each one runs live, with no sign-up."
         links={[{ href: "/projects", label: "All projects" }]}
       />
       <div class="bento">
-        {aiProjects.map((project) => (
+        {aiProjects.map((project, index) => (
           <ProjectTile
+            size={index === 0 && aiProjects.length % 2 === 1 ? "wide" : "standard"}
             title={project.data.title}
             tagline={project.data.tagline}
             href={projectPath(project)}
