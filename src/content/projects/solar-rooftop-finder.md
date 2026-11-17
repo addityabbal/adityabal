@@ -16,7 +16,7 @@ metrics:
   - value: "Top 50"
     label: "roofs shortlisted per pincode"
 demoUrl: "https://solar.adityabal.com/p/380015"
-order: 3
+order: 0
 featured: false
 ---
 
