@@ -4,6 +4,8 @@
 interface Link {
   href: string;
   label: string;
+  /** Stable analytics id (data-cta), so rewording the link keeps its history. */
+  cta?: string;
 }
 
 interface Props {
@@ -18,7 +20,7 @@ interface Props {
 
 const { eyebrow, title, lead, links = [], tone = "base", size = "display", align = "center" } = Astro.props;
 ---
-<section class:list={["hero", `tone-${tone}`, `hero-${size}`, { center: align === "center" }]}>
+<section class:list={["hero", `tone-${tone}`, `hero-${size}`, { center: align === "center" }]} data-track-section="hero">
   <div class="wrap hero-inner">
     {Astro.slots.has("media") && (
       <div class="hero-media">
@@ -31,7 +33,7 @@ const { eyebrow, title, lead, links = [], tone = "base", size = "display", align
     {links.length > 0 && (
       <p class="link-row">
         {links.map((link) => (
-          <a class="link-chevron" href={link.href}>{link.label}</a>
+          <a class="link-chevron" href={link.href} data-cta={link.cta}>{link.label}</a>
         ))}
       </p>
     )}

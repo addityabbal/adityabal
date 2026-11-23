@@ -52,10 +52,10 @@ const shortcuts = [
     })();
   </script>
 
-  <nav class="shortcuts" aria-label="Shortcuts">
+  <nav class="shortcuts" aria-label="Shortcuts" data-zone="shortcuts">
     <ul class="wrap">
       {shortcuts.map((link) => (
-        <li><a href={link.href}>{link.label}</a></li>
+        <li><a href={link.href} data-cta={`shortcuts.${link.label.toLowerCase()}`}>{link.label}</a></li>
       ))}
     </ul>
   </nav>
@@ -65,8 +65,8 @@ const shortcuts = [
     title="Product Leadership for AI era"
     lead="12+ years building platforms at scale at Jio. Four live projects you can try right now."
     links={[
-      { href: "#projects", label: "Try the AI demos" },
-      { href: "/contact", label: "Get in touch" },
+      { href: "#projects", label: "Try the AI demos", cta: "hero.try_demos" },
+      { href: "/contact", label: "Get in touch", cta: "hero.get_in_touch" },
     ]}
   >
     <Image
@@ -94,7 +94,7 @@ const shortcuts = [
         id="projects"
         title="AI, shipped"
         lead="Built and deployed end to end. Each one runs live, with no sign-up."
-        links={[{ href: "/projects", label: "All projects" }]}
+        links={[{ href: "/projects", label: "All projects", cta: "projects.all" }]}
       />
       <div class="bento">
         {aiProjects.map((project, index) => (
@@ -117,7 +117,7 @@ const shortcuts = [
         id="products"
         title="Platforms built at scale"
         lead="Four products I built and scaled at Jio Platforms."
-        links={[{ href: "/about#experience", label: "See my experience" }]}
+        links={[{ href: "/about#experience", label: "See my experience", cta: "products.experience" }]}
       />
       <div class="bento">
         {platforms.map((project) => (
@@ -140,7 +140,7 @@ const shortcuts = [
         id="recognition"
         title="Recognised for it"
         lead="Awards, national stages and classrooms."
-        links={[{ href: "/about#recognition", label: "All recognition" }]}
+        links={[{ href: "/about#recognition", label: "All recognition", cta: "recognition.all" }]}
       />
       <ul class="rows" data-reveal>
         {highlights.map((item) => (
@@ -175,9 +175,9 @@ const shortcuts = [
         lead="A product role, a collaboration, or a good conversation about building at scale."
       />
       <p class="link-row center" data-reveal>
-        <!--email_off--><a class="link-chevron" href={`mailto:${site.email}`}>Email me</a><!--/email_off-->
-        <a class="link-chevron" href={site.linkedin} rel="me noopener">LinkedIn</a>
-        <a class="link-chevron" href="/contact">All contact details</a>
+        <!--email_off--><a class="link-chevron" href={`mailto:${site.email}`} data-cta="contact.email">Email me</a><!--/email_off-->
+        <a class="link-chevron" href={site.linkedin} rel="me noopener" data-cta="contact.linkedin">LinkedIn</a>
+        <a class="link-chevron" href="/contact" data-cta="contact.details">All contact details</a>
       </p>
     </div>
   </section>

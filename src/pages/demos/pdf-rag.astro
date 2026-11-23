@@ -53,9 +53,11 @@ Astro.response.headers.set("cache-control", "public, max-age=300");
     <link rel="stylesheet" href="/demos/pdf-rag-app/style.css" />
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script is:inline type="module" src="/demos/pdf-rag-app/app.js"></script>
+    <!-- First-party, cookieless analytics (/privacy). Same origin, so the CSP above allows it. -->
+    <script is:inline defer src="/a.js"></script>
   </head>
   <body>
-    <div id="app" data-sitekey={siteKey}></div>
+    <div id="app" data-zone="rag" data-sitekey={siteKey}></div>
 
     <div id="captcha-box" hidden role="dialog" aria-modal="true" aria-labelledby="captcha-title">
       <div class="captcha-card">
