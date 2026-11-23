@@ -1,0 +1,34 @@
+// Analytics cron Worker: nightly rollup + pruning, and the Monday digest email.
+// Separate from the site's Worker, so the site and the demos are never touched by it.
+// Deploy from the repo root:  npx wrangler deploy -c workers/analytics-cron/wrangler.jsonc
+// Try it locally:            npx wrangler dev -c workers/analytics-cron/wrangler.jsonc --test-scheduled
+//                            then open http://localhost:8787/__scheduled?cron=30+3+*+*+1
+{
+	"name": "adityabal-analytics-cron",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-03-29",
+	"observability": { "enabled": true },
+	"workers_dev": false,
+	"triggers": {
+		// UTC. 19:00 UTC = 00:30 IST daily (rollup); 03:30 UTC Monday = 09:00 IST Monday (digest).
+		"crons": ["0 19 * * *", "30 3 * * 1"]
+	},
+	"d1_databases": [
+		{
+			"binding": "ANALYTICS_DB",
+			"database_name": "adityabal-analytics",
+			"database_id": "00000000-0000-0000-0000-000000000000"
+		}
+	],
+	// Needs Email Routing on adityabal.com with the destination address verified (analytics/README.md).
+	"send_email": [
+		{
+			"name": "DIGEST_EMAIL",
+			"destination_address": "addityabbal@gmail.com"
+		}
+	],
+	"vars": {
+		"DIGEST_FROM": "digest@adityabal.com",
+		"DIGEST_TO": "addityabbal@gmail.com"
+	}
+}
