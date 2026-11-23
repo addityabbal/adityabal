@@ -4,8 +4,10 @@
 declare namespace Cloudflare {
 	interface Env {
 		DB: D1Database;
+		ANALYTICS_DB: D1Database;
 		RAG_INDEX: VectorizeIndex;
 		DEMO_LIMITER: RateLimit;
+		ANALYTICS_LIMITER: RateLimit;
 		AI: Ai;
 		ASSETS: Fetcher;
 		YOGA_MODEL: "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
@@ -14,6 +16,7 @@ declare namespace Cloudflare {
 		TURNSTILE_SECRET_KEY: string;
 		SESSION_SECRET: string;
 		ALLOWED_ORIGINS: string;
+		ANALYTICS_ORIGINS: string;
 	}
 }
 interface Env extends Cloudflare.Env {}

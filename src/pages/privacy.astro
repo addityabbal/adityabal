@@ -1,0 +1,41 @@
+---
+// /privacy: what the site counts and why, in plain words. Keep in step with public/a.js,
+// src/lib/analytics.ts and analytics/README.md.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import { site } from "../data/site";
+---
+<BaseLayout
+  path="/privacy"
+  title="Privacy — Aditya Hemant Bal"
+  description="What this site counts, what it never collects, and how to opt out."
+>
+  <Hero size="page" title="Privacy" lead="This site counts visits so I can see what is useful. It does not track you." />
+  <section class="section tone-alt" aria-label="Privacy details">
+    <div class="wrap prose">
+      <h2>What is counted</h2>
+      <p>
+        Page views, which links and buttons are clicked, which sections are seen and for how long, how far a page is
+        scrolled, and whether the live demos answer. Each event also notes the page, the website that sent you (its name
+        only), any campaign tags in the link (utm_source and similar), your rough location (country, region, city) and your
+        device type, browser and operating system.
+      </p>
+      <h2>What is never collected</h2>
+      <ul>
+        <li>No cookies, and nothing is stored in your browser.</li>
+        <li>No IP addresses. Visits on the same day are grouped by a code that changes every midnight (India time) and cannot be traced back to you or linked across days.</li>
+        <li>No content: nothing you type into a demo, no demo answers, no email addresses or phone numbers.</li>
+        <li>No advertising or third-party trackers. Everything stays on this site's own Cloudflare account.</li>
+      </ul>
+      <h2>Opting out</h2>
+      <p>
+        If your browser sends a Global Privacy Control signal, nothing is counted. Blocking JavaScript also stops it, and the
+        site works the same.
+      </p>
+      <h2>How long it is kept</h2>
+      <p>Individual events are deleted after 400 days. Daily totals are kept.</p>
+      <h2>Questions</h2>
+      <p><!--email_off-->Email <a href={`mailto:${site.email}`} data-cta="privacy.email">{site.email}</a>.<!--/email_off--></p>
+    </div>
+  </section>
+</BaseLayout>
