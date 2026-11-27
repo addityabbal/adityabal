@@ -3,6 +3,8 @@
 interface Link {
   href: string;
   label: string;
+  /** Stable analytics id (data-cta), so rewording the link keeps its history. */
+  cta?: string;
 }
 
 interface Props {
@@ -25,7 +27,7 @@ const Heading = `h${level}` as "h2" | "h3";
   {links.length > 0 && (
     <p class="link-row">
       {links.map((link) => (
-        <a class="link-chevron" href={link.href}>{link.label}</a>
+        <a class="link-chevron" href={link.href} data-cta={link.cta}>{link.label}</a>
       ))}
     </p>
   )}

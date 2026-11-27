@@ -18,7 +18,9 @@
 		"TURNSTILE_SITE_KEY": "0x4AAAAAAF_O6R3MA5HcxYls",
 		"ALLOWED_ORIGINS": "https://adityabal.com,https://www.adityabal.com",
 		"YOGA_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-		"RAG_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+		"RAG_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+		// First-party analytics (/api/e): pages allowed to send events. See analytics/README.md.
+		"ANALYTICS_ORIGINS": "https://adityabal.com,https://www.adityabal.com,https://scorecard.adityabal.com,https://solar.adityabal.com"
 	},
 	// Workers AI: free 10,000 neurons/day, shared across demos (see migrations/0002_rag.sql).
 	"ai": {
@@ -40,6 +42,14 @@
 			"database_name": "adityabal-demos",
 			"database_id": "2ac8d598-bc8b-446e-98dc-7b1b2c4a2f52",
 			"migrations_dir": "migrations"
+		},
+		// Analytics events (created 2026-11-27; schema in migrations-analytics/).
+		// Not marked remote, so `npm run dev` uses a local copy and never writes to production.
+		{
+			"binding": "ANALYTICS_DB",
+			"database_name": "adityabal-analytics",
+			"database_id": "47df5869-1c58-422a-8783-59dcb52b8f32",
+			"migrations_dir": "migrations-analytics"
 		}
 	],
 	// 10 requests per IP per minute across demo APIs.
@@ -48,6 +58,12 @@
 			"name": "DEMO_LIMITER",
 			"namespace_id": "1001",
 			"simple": { "limit": 10, "period": 60 }
+		},
+		// 120 analytics beacons per IP per minute (/api/e), separate from the demo limit.
+		{
+			"name": "ANALYTICS_LIMITER",
+			"namespace_id": "1002",
+			"simple": { "limit": 120, "period": 60 }
 		}
 	]
 }

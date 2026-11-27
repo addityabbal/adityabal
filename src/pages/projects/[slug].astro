@@ -101,17 +101,17 @@ const facts = [
   jsonLd={jsonLd}
 >
   <article>
-    <header class="project-hero tone-base">
+    <header class="project-hero tone-base" data-zone="header">
       <div class="wrap">
         {data.logo && <img class="project-logo" src={data.logo.src} alt={`${data.title} logo`} width="56" height="56" />}
-        <p class="eyebrow"><a class="tap crumb" href="/projects">Projects</a> · {typeLabels[data.type]}</p>
+        <p class="eyebrow"><a class="tap crumb" href="/projects" data-cta="project.crumb">Projects</a> · {typeLabels[data.type]}</p>
         <h1>{data.title}</h1>
         <p class="project-tagline">{data.tagline}</p>
         <div class="project-actions">
-          {data.demoUrl && <a class="cta" href={data.demoUrl}>Try the live demo</a>}
-          {data.repoUrl && <a class="link-chevron tap" href={data.repoUrl} rel="noopener">View source on GitHub</a>}
-          {data.pressUrl && !data.demoUrl && <a class="link-chevron tap" href={data.pressUrl} rel="noopener">{data.pressLabel ?? "Press coverage"}</a>}
-          <button type="button" class="cta cta-quiet" data-copy-link={shortUrl}>
+          {data.demoUrl && <a class="cta" href={data.demoUrl} data-cta="project.demo">Try the live demo</a>}
+          {data.repoUrl && <a class="link-chevron tap" href={data.repoUrl} rel="noopener" data-cta="project.repo">View source on GitHub</a>}
+          {data.pressUrl && !data.demoUrl && <a class="link-chevron tap" href={data.pressUrl} rel="noopener" data-cta="project.press">{data.pressLabel ?? "Press coverage"}</a>}
+          <button type="button" class="cta cta-quiet" data-copy-link={shortUrl} data-cta="project.copy_link">
             <span data-copy-label>Copy link</span>
           </button>
           <span class="visually-hidden" aria-live="polite" data-copy-status></span>
@@ -133,22 +133,22 @@ const facts = [
       </div>
     </section>
 
-    <nav class="section-nav" aria-label="On this page">
+    <nav class="section-nav" aria-label="On this page" data-zone="toc">
       <ul class="wrap">
         {sections.map((section) => (
-          <li><a href={`#${section.slug}`}>{section.text}</a></li>
+          <li><a href={`#${section.slug}`} data-cta={`project.toc:${section.slug}`}>{section.text}</a></li>
         ))}
       </ul>
     </nav>
 
-    <div class="tone-base project-body">
+    <div class="tone-base project-body" data-zone="body">
       <div class="wrap">
         <div class="prose">
           {hideTodos ? <Fragment set:html={publicHtml} /> : <Content />}
         </div>
-        <p class="link-row project-end">
-          <a class="link-chevron" href="/projects">All projects</a>
-          <a class="link-chevron" href="/contact">Get in touch</a>
+        <p class="link-row project-end" data-zone="end">
+          <a class="link-chevron" href="/projects" data-cta="project.all">All projects</a>
+          <a class="link-chevron" href="/contact" data-cta="project.get_in_touch">Get in touch</a>
         </p>
       </div>
     </div>

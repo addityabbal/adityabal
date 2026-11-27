@@ -5,7 +5,7 @@ import { absoluteUrl } from "../data/site";
 
 export const GET: APIRoute = async () => {
   const projects = await getProjects();
-  const paths = ["/", "/projects", ...projects.map(projectPath), "/about", "/contact", "/demos/yoga-doc", "/demos/pdf-rag"];
+  const paths = ["/", "/projects", ...projects.map(projectPath), "/about", "/contact", "/privacy", "/demos/yoga-doc", "/demos/pdf-rag"];
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +

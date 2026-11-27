@@ -15,6 +15,7 @@ import {
   sessionCookie,
   verifyTurnstile,
 } from "../../lib/demo-guard";
+import { logServerEvent } from "../../lib/analytics";
 
 export const prerender = false;
 
@@ -83,6 +84,10 @@ async function* readSseText(stream: ReadableStream<Uint8Array>): AsyncGenerator<
 
 export const POST: APIRoute = async ({ request }) => {
   const ip = clientIp(request);
+  // Analytics: one demo_result per call, with status and latency. Never the question or answer.
+  const started = Date.now();
+  const demoResult = (status: string) =>
+    logServerEvent(request, { event: "demo_result", target: DEMO, detail: status, value: Date.now() - started });
 
   // 1. Our own pages only.
   if (!originAllowed(request)) return json(403, { error: "forbidden" });
@@ -105,6 +110,7 @@ export const POST: APIRoute = async ({ request }) => {
   // 3. Per-IP rate limit (also covers captcha attempts).
   if (!(await rateLimitOk(`${DEMO}:${ip}`))) {
     await logRequest(DEMO, ip, "rate_limited", zone);
+    demoResult("rate_limited");
     return json(429, { error: "rate_limited" }, { "retry-after": "60" });
   }
 
@@ -115,6 +121,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (!token) return json(403, { error: "captcha_required" });
     if (!(await verifyTurnstile(token, ip, DEMO))) {
       await logRequest(DEMO, ip, "captcha_failed", zone);
+      demoResult("turnstile_failed");
       return json(403, { error: "captcha_required" });
     }
     setCookie = await sessionCookie(COOKIE, "/api/yoga");
@@ -124,6 +131,7 @@ export const POST: APIRoute = async ({ request }) => {
   const quota = await consumeDailyQuota(DEMO);
   if (quota !== "ok") {
     await logRequest(DEMO, ip, quota, zone);
+    demoResult(quota);
     return json(503, { error: quota }, setCookie ? { "set-cookie": setCookie } : {});
   }
   await logRequest(DEMO, ip, "ok", zone);
@@ -143,9 +151,11 @@ export const POST: APIRoute = async ({ request }) => {
           ],
         } as never)) as unknown as ReadableStream<Uint8Array>;
         for await (const text of readSseText(sse)) controller.enqueue(encoder.encode(text));
+        demoResult("ok");
       } catch (err) {
         // Includes running out of the free daily Workers AI allowance.
         console.error("yoga demo: Workers AI error", err);
+        demoResult("error");
         controller.enqueue(encoder.encode("\n[[unavailable]]"));
       }
       controller.close();

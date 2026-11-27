@@ -238,6 +238,9 @@ function useFallback(zoneId, noticeKey) {
 
 async function fetchPoses(zoneId) {
   const seq = ++requestSeq
+  // Analytics (public/a.js): which body zone was asked about. Optional chaining keeps the demo
+  // working when the tracker is blocked or missing.
+  window.abTrack?.('demo_query', { target: 'yoga-doc', zone: zoneId, detail: 'body_zone' })
   loadingPoses = true
   streaming = false
   streamText = ''

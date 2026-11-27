@@ -16,6 +16,7 @@ import {
   sessionCookie,
   verifyTurnstile,
 } from "../../lib/demo-guard";
+import { logServerEvent } from "../../lib/analytics";
 
 export const prerender = false;
 
@@ -70,6 +71,10 @@ async function* readSseText(stream: ReadableStream<Uint8Array>): AsyncGenerator<
 
 export const POST: APIRoute = async ({ request }) => {
   const ip = clientIp(request);
+  // Analytics: one demo_result per call, with status and latency. Never the question or answer.
+  const started = Date.now();
+  const demoResult = (status: string) =>
+    logServerEvent(request, { event: "demo_result", target: DEMO, detail: status, value: Date.now() - started });
 
   // 1. Our own pages only.
   if (!originAllowed(request)) return json(403, { error: "forbidden" });
@@ -92,6 +97,7 @@ export const POST: APIRoute = async ({ request }) => {
   // 3. Per-IP rate limit (also covers captcha attempts).
   if (!(await rateLimitOk(`${DEMO}:${ip}`))) {
     await logRequest(DEMO, ip, "rate_limited");
+    demoResult("rate_limited");
     return json(429, { error: "rate_limited" }, { "retry-after": "60" });
   }
 
@@ -102,6 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (!token) return json(403, { error: "captcha_required" });
     if (!(await verifyTurnstile(token, ip, DEMO))) {
       await logRequest(DEMO, ip, "captcha_failed");
+      demoResult("turnstile_failed");
       return json(403, { error: "captcha_required" });
     }
     setCookie = await sessionCookie(COOKIE, "/api/rag");
@@ -111,6 +118,7 @@ export const POST: APIRoute = async ({ request }) => {
   const quota = await consumeDailyQuota(DEMO);
   if (quota !== "ok") {
     await logRequest(DEMO, ip, quota);
+    demoResult(quota);
     return json(503, { error: quota }, setCookie ? { "set-cookie": setCookie } : {});
   }
 
@@ -139,6 +147,7 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (err) {
     console.error("rag demo: retrieval error", err);
     await logRequest(DEMO, ip, "retrieval_error");
+    demoResult("retrieval_error");
     return json(502, { error: "retrieval_unavailable" }, setCookie ? { "set-cookie": setCookie } : {});
   }
   await logRequest(DEMO, ip, "ok");
@@ -151,6 +160,7 @@ export const POST: APIRoute = async ({ request }) => {
 
       if (!chunks.length) {
         send({ type: "text", text: "I couldn't find anything relevant to that question in the study guide." });
+        demoResult("no_match");
         controller.close();
         return;
       }
@@ -165,8 +175,10 @@ export const POST: APIRoute = async ({ request }) => {
           ],
         } as never)) as unknown as ReadableStream<Uint8Array>;
         for await (const text of readSseText(sse)) send({ type: "text", text });
+        demoResult("ok");
       } catch (err) {
         console.error("rag demo: Workers AI generation error", err);
+        demoResult("error");
         send({ type: "text", text: "\n[[unavailable]]" });
       }
       controller.close();

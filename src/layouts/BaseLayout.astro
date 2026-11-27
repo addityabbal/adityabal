@@ -8,6 +8,8 @@ import Footer from "../components/Footer.astro";
 import type { ComponentProps } from "astro/types";
 
 type Props = ComponentProps<typeof Seo>;
+// Marks the 404 page for the analytics tracker (public/a.js), which sends not_found from it.
+const pageType = Astro.props.path === "/404" ? "404" : undefined;
 ---
 <!doctype html>
 <html lang="en-IN">
@@ -31,10 +33,12 @@ type Props = ComponentProps<typeof Seo>;
         } catch (e) {}
       })();
     </script>
+    <!-- First-party, cookieless analytics: see /privacy and analytics/README.md. -->
+    <script is:inline defer src="/a.js"></script>
     <Seo {...Astro.props} />
     <slot name="head" />
   </head>
-  <body>
+  <body data-ab-page={pageType}>
     <a class="skip-link" href="#main">Skip to main content</a>
     <Nav />
     <main id="main">

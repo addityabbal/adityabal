@@ -16,20 +16,20 @@ import { site } from "../data/site";
     lead="A product role, a collaboration, or a good conversation about building at scale."
   />
 
-  <section class="section tone-alt contact" aria-label="Contact details">
+  <section class="section tone-alt contact" aria-label="Contact details" data-zone="channels">
     <div class="wrap">
       <ul class="channels">
         <li>
           <p class="eyebrow">Email</p>
-          <!--email_off--><a href={`mailto:${site.email}`}>{site.email}</a><!--/email_off-->
+          <!--email_off--><a href={`mailto:${site.email}`} data-cta="contact_page.email">{site.email}</a><!--/email_off-->
         </li>
         <li>
           <p class="eyebrow">LinkedIn</p>
-          <a href={site.linkedin} rel="me noopener">linkedin.com/in/addityabbal</a>
+          <a href={site.linkedin} rel="me noopener" data-cta="contact_page.linkedin">linkedin.com/in/addityabbal</a>
         </li>
         <li>
           <p class="eyebrow">Phone</p>
-          <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a>
+          <a href={`tel:${site.phoneHref}`} data-cta="contact_page.phone">{site.phoneDisplay}</a>
         </li>
       </ul>
       <p class="where">{site.location.city}, India</p>

@@ -130,7 +130,7 @@ function renderShell() {
     </div>
 
     <div class="suggestions" id="suggestions">
-      ${SUGGESTIONS.map(s => `<button class="suggestion-chip" data-q="${esc(s)}">${esc(s)}</button>`).join('')}
+      ${SUGGESTIONS.map(s => `<button class="suggestion-chip" data-cta="rag.chip" data-q="${esc(s)}">${esc(s)}</button>`).join('')}
     </div>
 
     <div class="chat-log" id="chat-log"></div>
@@ -148,10 +148,15 @@ function renderShell() {
     const q = input.value.trim()
     if (!q) return
     input.value = ''
+    // Analytics (public/a.js): input type only, never the question text.
+    window.abTrack?.('demo_query', { target: 'pdf-rag', detail: 'typed' })
     ask(q)
   })
   document.querySelectorAll('.suggestion-chip').forEach(chip => {
-    chip.addEventListener('click', () => ask(chip.dataset.q))
+    chip.addEventListener('click', () => {
+      window.abTrack?.('demo_query', { target: 'pdf-rag', detail: 'chip' })
+      ask(chip.dataset.q)
+    })
   })
 }
 

@@ -28,7 +28,7 @@ const filters = [
     <div class="wrap">
       <div class="filters" role="group" aria-label="Filter projects by type" hidden>
         {filters.map((filter) => (
-          <button type="button" class="filter" data-filter={filter.value} aria-pressed={filter.value === "all" ? "true" : "false"}>
+          <button type="button" class="filter" data-filter={filter.value} data-cta={`projects.filter:${filter.value}`} aria-pressed={filter.value === "all" ? "true" : "false"}>
             {filter.label}
           </button>
         ))}

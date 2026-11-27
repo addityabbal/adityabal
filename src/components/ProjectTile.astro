@@ -20,6 +20,7 @@ interface Props {
 
 const { title, tagline, href, label, demoUrl, metric, size = "standard", headingLevel = 3, type, logo } = Astro.props;
 const Heading = `h${headingLevel}` as "h2" | "h3";
+const slug = href.split("/").filter(Boolean).pop() ?? "";
 ---
 <article class:list={["tile", `tile-${size}`]} data-type={type} data-reveal>
   {logo && <img class="tile-logo" src={logo.src} alt="" width="48" height="48" loading="lazy" decoding="async" />}
@@ -33,8 +34,8 @@ const Heading = `h${headingLevel}` as "h2" | "h3";
     </p>
   )}
   <p class="link-row tile-links">
-    <a class="link-chevron" href={href}><span>Learn more<span class="visually-hidden"> about {title}</span></span></a>
-    {demoUrl && <a class="link-chevron" href={demoUrl}><span>Try the<span class="visually-hidden"> {title}</span> demo</span></a>}
+    <a class="link-chevron" href={href} data-cta={`tile.learn_more:${slug}`}><span>Learn more<span class="visually-hidden"> about {title}</span></span></a>
+    {demoUrl && <a class="link-chevron" href={demoUrl} data-cta={`tile.try_demo:${slug}`}><span>Try the<span class="visually-hidden"> {title}</span> demo</span></a>}
   </p>
 </article>
 
