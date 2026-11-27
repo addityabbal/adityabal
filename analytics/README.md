@@ -13,13 +13,9 @@ first: **contact actions per 100 visitors, by source.**
 ## One-time setup (Cloudflare dashboard and terminal)
 
 1. **Web Analytics:** Cloudflare dashboard → Analytics & Logs → Web Analytics → add `adityabal.com` (automatic setup).
-2. **Create the database** and paste its id into **both** `wrangler.jsonc` and
-   `workers/analytics-cron/wrangler.jsonc` (replace `00000000-0000-0000-0000-000000000000`):
-   ```sh
-   npx wrangler d1 create adityabal-analytics
-   npx wrangler d1 migrations apply adityabal-analytics --local
-   npx wrangler d1 migrations apply adityabal-analytics --remote
-   ```
+2. **Database:** done on 2026-11-27. `adityabal-analytics` exists (id in both `wrangler.jsonc` files) and
+   `0001_events.sql` was applied with `d1 execute --remote`. A later `npx wrangler d1 migrations apply
+   adityabal-analytics --remote` would re-run it harmlessly (every statement is IF NOT EXISTS / OR IGNORE).
 3. **Deploy the site** as usual (`npm run deploy`). Events start arriving on the next page view.
 4. **Email digest:** turn on Email Routing for adityabal.com (it adds MX records; skip if another mail
    provider already uses the domain), verify `addityabbal@gmail.com` as a destination, then:

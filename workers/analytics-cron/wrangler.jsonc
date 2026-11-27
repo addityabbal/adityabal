@@ -17,7 +17,7 @@
 		{
 			"binding": "ANALYTICS_DB",
 			"database_name": "adityabal-analytics",
-			"database_id": "00000000-0000-0000-0000-000000000000"
+			"database_id": "47df5869-1c58-422a-8783-59dcb52b8f32"
 		}
 	],
 	// Needs Email Routing on adityabal.com with the destination address verified (analytics/README.md).
